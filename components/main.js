@@ -25,14 +25,13 @@ export default class Main extends React.Component {
     console.log(typeof r)
     return (
       <div>
-        <DevTools />
         {
           this.props.mainStore.getTemperatures && this.props.mainStore.getTemperatures.map(
             (temp, key) =>
               <TempContainer key={ key } index={ key } temp={ temp } />
-          )
-        }
-        <button onClick={ this.addHundler } style={styles.addStyle}>Add</button>
+          )  
+        }       
+        <button className="addButtons" ref="addButtons" onClick={ this.addHundler } style={styles.addStyle}>Add</button>
       </div>
     )
   }
@@ -49,7 +48,7 @@ class TempContainer extends React.Component {
         <button style={styles.tempValStyle} onClick={ () => this.props.temp.upTemperature() }>+</button>
         <button style={styles.tempValStyle} onClick={ () => this.props.temp.downTemperature() }>-</button>
         <div>Location: { this.props.temp.location }</div>
-        <Button />
+        <Button size="lg" type="primary" onClick={() => alert("!!!!")}>Button1</Button>
       </div> 
     )
   }

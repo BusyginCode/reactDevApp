@@ -1,3 +1,3 @@
-import { TestComponent } from 'components'
+import { Root } from 'components'
 
-ReactDOM.render(<TestComponent />, document.getElementById("root"))
+ReactDOM.render(<Root />, document.getElementById("root"))

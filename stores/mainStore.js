@@ -1,5 +1,5 @@
 import { observable, computed, action } from "mobx"
-
+import { Temp } from 'classes'
 export default new class MainStore {
 
   @observable temp = []
@@ -14,30 +14,9 @@ export default new class MainStore {
     this.temp.push(new Temp(temp, loc))
   }
 
+  @action
+  clearStore() {
+  	this.temp = []
+  }
 }
 
-class Temp {
-  @observable temperature = 0
-  @observable location = ''
-
-  @computed
-  get getTemperature() {
-    return this.temperature
-  }
-
-  constructor(temperature, location) {
-    this.temperature = temperature
-    this.location = location
-  }
-
-  @action
-  upTemperature(e) {
-    this.temperature++
-  }
-
-  @action
-  downTemperature() {
-    this.temperature--
-  }
-
-}

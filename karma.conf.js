@@ -14,7 +14,7 @@ module.exports = config => config.set({
     'tests.webpack.js',
   ],
   preprocessors: {
-    'tests.webpack.js': ['webpack', /*'sourcemap'*/],
+    'tests.webpack.js': ['webpack'],
   },
   reporters: ['dots'],
   webpack: webpackConfig,

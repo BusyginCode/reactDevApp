@@ -1,5 +1,6 @@
-import { TestComponent, Root } from 'components'
-import TestUtils from 'react-addons-test-utils'
+import { TestComponent, Root, Main } from 'components'
+import { MainStore } from 'stores'
+import { Temp } from 'classes'
 
 let cur;
 
@@ -10,14 +11,14 @@ const titleCheck = (component, text) => {
   expect(h1.textContent).toEqual(text);
 }
 
-describe('TestComponent', function () {
+describe('TestComponent', () => {
 
   beforeEach((done) => {
     cur = TestUtils.renderIntoDocument(<TestComponent/>);
     done()
   });
 
-  it('Does have h1', function () {
+  it('Does have h1', () => {
     titleCheck(cur, "Old text")
   });
 
@@ -32,7 +33,6 @@ describe('TestComponent', function () {
     const h1 = TestUtils.findRenderedDOMComponentWithTag(
       cur, 'h1'
     );
-    alert(h1)
     expect(h1.style.color).toEqual("red");
   })
 
@@ -43,4 +43,21 @@ describe('TestComponent', function () {
   })
 
 });
+
+let main = TestUtils.renderIntoDocument(<Main mainStore={MainStore}/>);
+
+describe ('Main', () => {
+
+  it('Add temperature', () => {
+    const buttonComponent = TestUtils.findRenderedDOMComponentWithClass(main, 'addButtons')
+
+    console.log(Object.keys(TestUtils.Simulate))
+
+    TestUtils.Simulate.click(buttonComponent)
+    const temps = MainStore.getTemperatures.toJS()
+    const lastTemp = temps[temps.length ? temps.length - 1 : temps.length]
+    expect(lastTemp).toEqual(new Temp(0, 'Kiev'))
+  })
+
+})
 

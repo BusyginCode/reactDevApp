@@ -7,7 +7,7 @@ export default class Root extends React.Component {
   render() {
     return (
       <Provider mainStore={MainStore}>
-        <Main />
+        <Main main />
       </Provider>
     )
   }

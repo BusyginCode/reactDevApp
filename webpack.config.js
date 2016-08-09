@@ -19,6 +19,7 @@ module.exports = {
     alias: {
       components: __dirname + '/components',
       stores: __dirname + '/stores',
+      classes: __dirname + '/classes'
     },
   },
 
@@ -43,6 +44,7 @@ module.exports = {
     new webpack.ProvidePlugin({
       React: 'react',
       ReactDOM: 'react-dom',
+      TestUtils: 'react-addons-test-utils'
     }),
   ],
 

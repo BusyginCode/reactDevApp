@@ -48,7 +48,7 @@
 	
 	var _components = __webpack_require__(175);
 	
-	ReactDOM.render(React.createElement(_components.TestComponent, null), document.getElementById("root"));
+	ReactDOM.render(React.createElement(_components.Root, null), document.getElementById("root"));
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(168)))
 
 /***/ },
@@ -21476,11 +21476,11 @@
 	
 	var _root2 = _interopRequireDefault(_root);
 	
-	var _motion = __webpack_require__(238);
+	var _motion = __webpack_require__(240);
 	
 	var _motion2 = _interopRequireDefault(_motion);
 	
-	var _testComponent = __webpack_require__(254);
+	var _testComponent = __webpack_require__(256);
 	
 	var _testComponent2 = _interopRequireDefault(_testComponent);
 	
@@ -21556,13 +21556,12 @@
 	      return React.createElement(
 	        'div',
 	        null,
-	        React.createElement(_mobxReactDevtools2.default, null),
 	        this.props.mainStore.getTemperatures && this.props.mainStore.getTemperatures.map(function (temp, key) {
 	          return React.createElement(TempContainer, { key: key, index: key, temp: temp });
 	        }),
 	        React.createElement(
 	          'button',
-	          { onClick: this.addHundler, style: styles.addStyle },
+	          { className: 'addButtons', ref: 'addButtons', onClick: this.addHundler, style: styles.addStyle },
 	          'Add'
 	        )
 	      );
@@ -21621,7 +21620,13 @@
 	          'Location: ',
 	          this.props.temp.location
 	        ),
-	        React.createElement(_elemental.Button, null)
+	        React.createElement(
+	          _elemental.Button,
+	          { size: 'lg', type: 'primary', onClick: function onClick() {
+	              return alert("!!!!");
+	            } },
+	          'Button1'
+	        )
 	      );
 	    }
 	  }]);
@@ -21650,7 +21655,7 @@
 /* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
-	!function(e,t){ true?module.exports=t(__webpack_require__(178),__webpack_require__(168),__webpack_require__(1)):"function"==typeof define&&define.amd?define(["mobx","react","react-dom"],t):"object"==typeof exports?exports.mobxReact=t(require("mobx"),require("react"),require("react-dom")):e.mobxReact=t(e.mobx,e.React,e.ReactDOM)}(this,function(e,t,r){return function(e){function t(n){if(r[n])return r[n].exports;var o=r[n]={exports:{},id:n,loaded:!1};return e[n].call(o.exports,o,o.exports,t),o.loaded=!0,o.exports}var r={};return t.m=e,t.c=r,t.p="",t(0)}([function(e,t,r){"use strict";function n(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var r in e)Object.prototype.hasOwnProperty.call(e,r)&&(t[r]=e[r]);return t["default"]=e,t}function o(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(t,"__esModule",{value:!0}),t.reactiveComponent=t.propTypes=t.inject=t.Provider=t.trackComponents=t.componentByNodeRegistery=t.renderReporter=t.observer=void 0;var i=arguments,a=r(1);Object.defineProperty(t,"observer",{enumerable:!0,get:function(){return a.observer}}),Object.defineProperty(t,"renderReporter",{enumerable:!0,get:function(){return a.renderReporter}}),Object.defineProperty(t,"componentByNodeRegistery",{enumerable:!0,get:function(){return a.componentByNodeRegistery}}),Object.defineProperty(t,"trackComponents",{enumerable:!0,get:function(){return a.trackComponents}});var u=r(7);Object.defineProperty(t,"Provider",{enumerable:!0,get:function(){return o(u)["default"]}});var s=r(6);Object.defineProperty(t,"inject",{enumerable:!0,get:function(){return o(s)["default"]}});var c=r(2),f=o(c),l=r(3),p=o(l),d=r(8),b=n(d),y=void 0;if(y="mobx-react",!f["default"])throw new Error(y+" requires the MobX package");if(!p["default"])throw new Error(y+" requires React to be available");t.propTypes=b,t["default"]=e.exports;t.reactiveComponent=function(){return console.warn("[mobx-react] `reactiveComponent` has been renamed to `observer` and will be removed in 1.1."),observer.apply(null,i)}},function(e,t,r){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}function o(e){return y["default"]?y["default"].findDOMNode(e):null}function i(e){var t=o(e);t&&j&&j.set(t,e),g.emit({event:"render",renderTime:e.__$mobRenderEnd-e.__$mobRenderStart,totalTime:Date.now()-e.__$mobRenderStart,component:e,node:t})}function a(){if("undefined"==typeof WeakMap)throw new Error("[mobx-react] tracking components is not supported in this browser.");x||(x=!0)}function u(e,t){var r=e[t],n=w[t];r?e[t]=function(){r.apply(this,arguments),n.apply(this,arguments)}:e[t]=n}function s(e,t){if("string"==typeof e)throw new Error("Store names should be provided as array");if(Array.isArray(e))return t?O["default"].apply(null,e)(s(t)):function(t){return s(e,t)};var r=e;if(!("function"!=typeof r||r.prototype&&r.prototype.render||r.isReactClass||d["default"].Component.isPrototypeOf(r)))return s(d["default"].createClass({displayName:r.displayName||r.name,propTypes:r.propTypes,contextTypes:r.contextTypes,getDefaultProps:function(){return r.defaultProps},render:function(){return r.call(this,this.props,this.context)}}));if(!r)throw new Error("Please pass a valid component to 'observer'");var n=r.prototype||r;return["componentWillMount","componentWillUnmount","componentDidMount","componentDidUpdate"].forEach(function(e){u(n,e)}),n.shouldComponentUpdate||(n.shouldComponentUpdate=w.shouldComponentUpdate),r.isMobXReactObserver=!0,r}Object.defineProperty(t,"__esModule",{value:!0}),t.renderReporter=t.componentByNodeRegistery=void 0;var c="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol?"symbol":typeof e};t.trackComponents=a,t.observer=s;var f=r(2),l=n(f),p=r(3),d=n(p),b=r(4),y=n(b),m=r(5),v=n(m),h=r(6),O=n(h),x=!1,j=t.componentByNodeRegistery="undefined"!=typeof WeakMap?new WeakMap:void 0,g=t.renderReporter=new v["default"],w={componentWillMount:function(){var e=this,t=this.displayName||this.name||this.constructor&&(this.constructor.displayName||this.constructor.name)||"<component>",r=this._reactInternalInstance&&this._reactInternalInstance._rootNodeID,n=this.render.bind(this),o=null,i=!1,a=function(){return o=new l["default"].Reaction(t+"#"+r+".render()",function(){i||(i=!0,"function"==typeof e.componentWillReact&&e.componentWillReact(),e.__$mobxIsUnmounted!==!0&&d["default"].Component.prototype.forceUpdate.call(e))}),u.$mobx=o,e.render=u,u()},u=function(){i=!1;var t=void 0;return o.track(function(){x&&(e.__$mobRenderStart=Date.now()),t=l["default"].extras.allowStateChanges(!1,n),x&&(e.__$mobRenderEnd=Date.now())}),t};this.render=a},componentWillUnmount:function(){if(this.render.$mobx&&this.render.$mobx.dispose(),this.__$mobxIsUnmounted=!0,x){var e=o(this);e&&j&&j["delete"](e),g.emit({event:"destroy",component:this,node:e})}},componentDidMount:function(){x&&i(this)},componentDidUpdate:function(){x&&i(this)},shouldComponentUpdate:function(e,t){if(this.render.$mobx&&this.render.$mobx.isScheduled()===!0)return!1;if(this.state!==t)return!0;var r=Object.keys(this.props);if(r.length!==Object.keys(e).length)return!0;for(var n=void 0,o=r.length-1;n=r[o];o--){var i=e[n];if(i!==this.props[n])return!0;if(i&&"object"===("undefined"==typeof i?"undefined":c(i))&&!l["default"].isObservable(i))return!0}return!1}}},function(t,r){t.exports=e},function(e,r){e.exports=t},function(e,t){e.exports=r},function(e,t){"use strict";function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(t,"__esModule",{value:!0});var n=function(){function e(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,r,n){return r&&e(t.prototype,r),n&&e(t,n),t}}(),o=function(){function e(){r(this,e),this.listeners=[]}return n(e,[{key:"on",value:function(e){var t=this;return this.listeners.push(e),function(){var r=t.listeners.indexOf(e);r!==-1&&t.listeners.splice(r,1)}}},{key:"emit",value:function(e){this.listeners.forEach(function(t){return t(e)})}}]),e}();t["default"]=o},function(e,t,r){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}function o(e,t){var r=s["default"].createClass({displayName:"MobXStoreInjector",render:function(){var r={};for(var n in this.props)this.props.hasOwnProperty(n)&&(r[n]=this.props[n]);return r=e(this.context.mobxStores||{},r,this.context),s["default"].createElement(t,r)}});return r.contextTypes={mobxStores:u.PropTypes.object},r.wrappedComponent=t,r}function i(e){return function(t,r){return e.forEach(function(e){if(!(e in r)){if(!(e in t))throw new Error("MobX observer: Store '"+e+"' is not available! Make sure it is provided by some Provider");r[e]=t[e]}}),r}}function a(){var e=void 0;if("function"==typeof arguments[0])e=arguments[0];else{for(var t=[],r=0;r<arguments.length;r++)t[r]=arguments[r];e=i(t)}return function(t){return o(e,t)}}Object.defineProperty(t,"__esModule",{value:!0}),t["default"]=a;var u=r(3),s=n(u)},function(e,t,r){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}function o(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function i(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function a(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}Object.defineProperty(t,"__esModule",{value:!0});var u=function(){function e(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,r,n){return r&&e(t.prototype,r),n&&e(t,n),t}}(),s=r(3),c=n(s),f={children:!0,key:!0,ref:!0},l=function(e){function t(){return o(this,t),i(this,Object.getPrototypeOf(t).apply(this,arguments))}return a(t,e),u(t,[{key:"render",value:function(){return c["default"].Children.only(this.props.children)}},{key:"getChildContext",value:function(){var e={},t=this.context.mobxStores;if(t)for(var r in t)e[r]=t[r];for(var n in this.props)f[n]||(e[n]=this.props[n]);return{mobxStores:e}}},{key:"componentWillReceiveProps",value:function(e){Object.keys(e).length!==Object.keys(this.props).length&&console.warn("MobX Provider: The set of provided stores has changed. Please avoid changing stores as the change might not propagate to all children");for(var t in e)f[t]||this.props[t]===e[t]||console.warn("MobX Provider: Provided store '"+t+"' has changed. Please avoid replacing stores as the change might not propagate to all children")}}]),t}(s.Component);l.contextTypes={mobxStores:s.PropTypes.object},l.childContextTypes={mobxStores:s.PropTypes.object.isRequired},t["default"]=l},function(e,t,r){"use strict";function n(e){function t(t,r,n,o,i,a){if(o=o||ANONYMOUS,a=a||n,null==r[n]){if(t){var u=null===r[n]?"null":"undefined";return new Error("The "+i+" `"+a+"` is marked as required in `"+o+"`, but its value is `"+u+"`.")}return null}return e(r,n,o,i,a)}var r=t.bind(null,!1);return r.isRequired=t.bind(null,!0),r}function o(e,t){return"symbol"===e||("Symbol"===t["@@toStringTag"]||"function"==typeof Symbol&&t instanceof Symbol)}function i(e){var t="undefined"==typeof e?"undefined":c(e);return Array.isArray(e)?"array":e instanceof RegExp?"object":o(t,e)?"symbol":t}function a(e){var t=i(e);if("object"===t){if(e instanceof Date)return"date";if(e instanceof RegExp)return"regexp"}return t}function u(e,t){return n(function(r,n,o,u,s){if(e&&i(r[n])===t.toLowerCase())return null;var c=void 0;switch(t){case"Array":c=f.isObservableArray;break;case"Object":c=f.isObservableObject;break;case"Map":c=f.isObservableMap;break;default:throw new Error("Unexpected mobxType: "+t)}var l=r[n];if(!c(l)){var p=a(l),d=e?" or javascript `"+t.toLowerCase()+"`":"";return new Error("Invalid prop `"+s+"` of type `"+p+"` supplied to `"+o+"`, expected `mobx.Observable"+t+"`"+d+".")}return null})}function s(e,t){return n(function(r,n,o,i,a){if("function"!=typeof t)return new Error("Property `"+a+"` of component `"+o+"` has invalid PropType notation.");var s=u(e,"Array")(r,n,o);if(s instanceof Error)return s;for(var c=r[n],f=0;f<c.length;f++)if(s=t(c,f,o,i,a+"["+f+"]"),s instanceof Error)return s;return null})}Object.defineProperty(t,"__esModule",{value:!0}),t.objectOrObservableObject=t.arrayOrObservableArrayOf=t.arrayOrObservableArray=t.observableObject=t.observableMap=t.observableArrayOf=t.observableArray=void 0;var c="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol?"symbol":typeof e},f=r(2);t.observableArray=u(!1,"Array"),t.observableArrayOf=s.bind(null,!1),t.observableMap=u(!1,"Map"),t.observableObject=u(!1,"Object"),t.arrayOrObservableArray=u(!0,"Array"),t.arrayOrObservableArrayOf=s.bind(null,!0),t.objectOrObservableObject=u(!0,"Object")}])});
+	!function(e,t){ true?module.exports=t(__webpack_require__(178),__webpack_require__(168),__webpack_require__(1)):"function"==typeof define&&define.amd?define(["mobx","react","react-dom"],t):"object"==typeof exports?exports.mobxReact=t(require("mobx"),require("react"),require("react-dom")):e.mobxReact=t(e.mobx,e.React,e.ReactDOM)}(this,function(e,t,r){return function(e){function t(n){if(r[n])return r[n].exports;var o=r[n]={exports:{},id:n,loaded:!1};return e[n].call(o.exports,o,o.exports,t),o.loaded=!0,o.exports}var r={};return t.m=e,t.c=r,t.p="",t(0)}([function(e,t,r){"use strict";function n(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var r in e)Object.prototype.hasOwnProperty.call(e,r)&&(t[r]=e[r]);return t["default"]=e,t}function o(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(t,"__esModule",{value:!0}),t.reactiveComponent=t.propTypes=t.inject=t.Provider=t.trackComponents=t.componentByNodeRegistery=t.renderReporter=t.observer=void 0;var i=arguments,a=r(1);Object.defineProperty(t,"observer",{enumerable:!0,get:function(){return a.observer}}),Object.defineProperty(t,"renderReporter",{enumerable:!0,get:function(){return a.renderReporter}}),Object.defineProperty(t,"componentByNodeRegistery",{enumerable:!0,get:function(){return a.componentByNodeRegistery}}),Object.defineProperty(t,"trackComponents",{enumerable:!0,get:function(){return a.trackComponents}});var u=r(9);Object.defineProperty(t,"Provider",{enumerable:!0,get:function(){return o(u)["default"]}});var c=r(6);Object.defineProperty(t,"inject",{enumerable:!0,get:function(){return o(c)["default"]}});var s=r(2),f=o(s),l=r(3),p=o(l),d=r(10),b=n(d),y=void 0;if(y="mobx-react",!f["default"])throw new Error(y+" requires the MobX package");if(!p["default"])throw new Error(y+" requires React to be available");t.propTypes=b,t["default"]=e.exports;t.reactiveComponent=function(){return console.warn("[mobx-react] `reactiveComponent` has been renamed to `observer` and will be removed in 1.1."),observer.apply(null,i)}},function(e,t,r){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}function o(e){return y["default"]?y["default"].findDOMNode(e):null}function i(e){var t=o(e);t&&w&&w.set(t,e),x.emit({event:"render",renderTime:e.__$mobRenderEnd-e.__$mobRenderStart,totalTime:Date.now()-e.__$mobRenderStart,component:e,node:t})}function a(){if("undefined"==typeof WeakMap)throw new Error("[mobx-react] tracking components is not supported in this browser.");g||(g=!0)}function u(e,t){var r=e[t],n=j[t];r?e[t]=function(){r.apply(this,arguments),n.apply(this,arguments)}:e[t]=n}function c(e,t){if("string"==typeof e)throw new Error("Store names should be provided as array");if(Array.isArray(e))return t?O["default"].apply(null,e)(c(t)):function(t){return c(e,t)};var r=e;if(!("function"!=typeof r||r.prototype&&r.prototype.render||r.isReactClass||d["default"].Component.isPrototypeOf(r)))return c(d["default"].createClass({displayName:r.displayName||r.name,propTypes:r.propTypes,contextTypes:r.contextTypes,getDefaultProps:function(){return r.defaultProps},render:function(){return r.call(this,this.props,this.context)}}));if(!r)throw new Error("Please pass a valid component to 'observer'");var n=r.prototype||r;return["componentWillMount","componentWillUnmount","componentDidMount","componentDidUpdate"].forEach(function(e){u(n,e)}),n.shouldComponentUpdate||(n.shouldComponentUpdate=j.shouldComponentUpdate),r.isMobXReactObserver=!0,r}Object.defineProperty(t,"__esModule",{value:!0}),t.renderReporter=t.componentByNodeRegistery=void 0;var s="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol?"symbol":typeof e};t.trackComponents=a,t.observer=c;var f=r(2),l=n(f),p=r(3),d=n(p),b=r(4),y=n(b),m=r(5),v=n(m),h=r(6),O=n(h),g=!1,w=t.componentByNodeRegistery="undefined"!=typeof WeakMap?new WeakMap:void 0,x=t.renderReporter=new v["default"],j={componentWillMount:function(){var e=this,t=this.displayName||this.name||this.constructor&&(this.constructor.displayName||this.constructor.name)||"<component>",r=this._reactInternalInstance&&this._reactInternalInstance._rootNodeID,n=this.render.bind(this),o=null,i=!1,a=function(){return o=new l["default"].Reaction(t+"#"+r+".render()",function(){i||(i=!0,"function"==typeof e.componentWillReact&&e.componentWillReact(),e.__$mobxIsUnmounted!==!0&&d["default"].Component.prototype.forceUpdate.call(e))}),u.$mobx=o,e.render=u,u()},u=function(){i=!1;var t=void 0;return o.track(function(){g&&(e.__$mobRenderStart=Date.now()),t=l["default"].extras.allowStateChanges(!1,n),g&&(e.__$mobRenderEnd=Date.now())}),t};this.render=a},componentWillUnmount:function(){if(this.render.$mobx&&this.render.$mobx.dispose(),this.__$mobxIsUnmounted=!0,g){var e=o(this);e&&w&&w["delete"](e),x.emit({event:"destroy",component:this,node:e})}},componentDidMount:function(){g&&i(this)},componentDidUpdate:function(){g&&i(this)},shouldComponentUpdate:function(e,t){if(this.render.$mobx&&this.render.$mobx.isScheduled()===!0)return!1;if(this.state!==t)return!0;var r=Object.keys(this.props);if(r.length!==Object.keys(e).length)return!0;for(var n=void 0,o=r.length-1;n=r[o];o--){var i=e[n];if(i!==this.props[n])return!0;if(i&&"object"===("undefined"==typeof i?"undefined":s(i))&&!l["default"].isObservable(i))return!0}return!1}}},function(t,r){t.exports=e},function(e,r){e.exports=t},function(e,t){e.exports=r},function(e,t){"use strict";function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(t,"__esModule",{value:!0});var n=function(){function e(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,r,n){return r&&e(t.prototype,r),n&&e(t,n),t}}(),o=function(){function e(){r(this,e),this.listeners=[]}return n(e,[{key:"on",value:function(e){var t=this;return this.listeners.push(e),function(){var r=t.listeners.indexOf(e);-1!==r&&t.listeners.splice(r,1)}}},{key:"emit",value:function(e){this.listeners.forEach(function(t){return t(e)})}}]),e}();t["default"]=o},function(e,t,r){(function(e){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}function o(e,t){var r=s["default"].createClass({displayName:"MobXStoreInjector",render:function(){var r=this,n={};for(var o in this.props)this.props.hasOwnProperty(o)&&(n[o]=this.props[o]);var i=e(this.context.mobxStores||{},n,this.context)||{};for(var a in i)n[a]=i[a];return n.ref=function(e){r.wrappedInstance=e},s["default"].createElement(t,n)}});return r.contextTypes={mobxStores:c.PropTypes.object},r.wrappedComponent=t,i(r,t),(0,l["default"])(r,t),r}function i(t,r){"undefined"!=typeof e&&e.env&&"production"!==e.env.NODE_ENV&&["propTypes","defaultProps","contextTypes"].forEach(function(e){var n=t[e];Object.defineProperty(t,e,{set:function(t){var n=r.displayName||r.name;console.warn("Mobx Injector: you are trying to attach "+e+" to HOC instead of "+n+". Use `wrappedComponent` property.")},get:function(){return n}})})}function a(e){return function(t,r){return e.forEach(function(e){if(!(e in r)){if(!(e in t))throw new Error("MobX observer: Store '"+e+"' is not available! Make sure it is provided by some Provider");r[e]=t[e]}}),r}}function u(){var e=void 0;if("function"==typeof arguments[0])e=arguments[0];else{for(var t=[],r=0;r<arguments.length;r++)t[r]=arguments[r];e=a(t)}return function(t){return o(e,t)}}Object.defineProperty(t,"__esModule",{value:!0}),t["default"]=u;var c=r(3),s=n(c),f=r(8),l=n(f)}).call(t,r(7))},function(e,t){function r(e){return c===setTimeout?setTimeout(e,0):c.call(null,e,0)}function n(e){s===clearTimeout?clearTimeout(e):s.call(null,e)}function o(){d&&l&&(d=!1,l.length?p=l.concat(p):b=-1,p.length&&i())}function i(){if(!d){var e=r(o);d=!0;for(var t=p.length;t;){for(l=p,p=[];++b<t;)l&&l[b].run();b=-1,t=p.length}l=null,d=!1,n(e)}}function a(e,t){this.fun=e,this.array=t}function u(){}var c,s,f=e.exports={};!function(){try{c=setTimeout}catch(e){c=function(){throw new Error("setTimeout is not defined")}}try{s=clearTimeout}catch(e){s=function(){throw new Error("clearTimeout is not defined")}}}();var l,p=[],d=!1,b=-1;f.nextTick=function(e){var t=new Array(arguments.length-1);if(arguments.length>1)for(var n=1;n<arguments.length;n++)t[n-1]=arguments[n];p.push(new a(e,t)),1!==p.length||d||r(i)},a.prototype.run=function(){this.fun.apply(null,this.array)},f.title="browser",f.browser=!0,f.env={},f.argv=[],f.version="",f.versions={},f.on=u,f.addListener=u,f.once=u,f.off=u,f.removeListener=u,f.removeAllListeners=u,f.emit=u,f.binding=function(e){throw new Error("process.binding is not supported")},f.cwd=function(){return"/"},f.chdir=function(e){throw new Error("process.chdir is not supported")},f.umask=function(){return 0}},function(e,t){"use strict";var r={childContextTypes:!0,contextTypes:!0,defaultProps:!0,displayName:!0,getDefaultProps:!0,mixins:!0,propTypes:!0,type:!0},n={name:!0,length:!0,prototype:!0,caller:!0,arguments:!0,arity:!0},o="function"==typeof Object.getOwnPropertySymbols;e.exports=function(e,t,i){if("string"!=typeof t){var a=Object.getOwnPropertyNames(t);o&&(a=a.concat(Object.getOwnPropertySymbols(t)));for(var u=0;u<a.length;++u)if(!(r[a[u]]||n[a[u]]||i&&i[a[u]]))try{e[a[u]]=t[a[u]]}catch(c){}}return e}},function(e,t,r){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}function o(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function i(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function a(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}Object.defineProperty(t,"__esModule",{value:!0});var u=function(){function e(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,r,n){return r&&e(t.prototype,r),n&&e(t,n),t}}(),c=r(3),s=n(c),f={children:!0,key:!0,ref:!0},l=function(e){function t(){return o(this,t),i(this,Object.getPrototypeOf(t).apply(this,arguments))}return a(t,e),u(t,[{key:"render",value:function(){return s["default"].Children.only(this.props.children)}},{key:"getChildContext",value:function(){var e={},t=this.context.mobxStores;if(t)for(var r in t)e[r]=t[r];for(var n in this.props)f[n]||(e[n]=this.props[n]);return{mobxStores:e}}},{key:"componentWillReceiveProps",value:function(e){Object.keys(e).length!==Object.keys(this.props).length&&console.warn("MobX Provider: The set of provided stores has changed. Please avoid changing stores as the change might not propagate to all children");for(var t in e)f[t]||this.props[t]===e[t]||console.warn("MobX Provider: Provided store '"+t+"' has changed. Please avoid replacing stores as the change might not propagate to all children")}}]),t}(c.Component);l.contextTypes={mobxStores:c.PropTypes.object},l.childContextTypes={mobxStores:c.PropTypes.object.isRequired},t["default"]=l},function(e,t,r){"use strict";function n(e){function t(t,r,n,o,i,a){return(0,f.untracked)(function(){if(o=o||"<<anonymous>>",a=a||n,null==r[n]){if(t){var u=null===r[n]?"null":"undefined";return new Error("The "+i+" `"+a+"` is marked as required in `"+o+"`, but its value is `"+u+"`.")}return null}return e(r,n,o,i,a)})}var r=t.bind(null,!1);return r.isRequired=t.bind(null,!0),r}function o(e,t){return"symbol"===e?!0:"Symbol"===t["@@toStringTag"]?!0:"function"==typeof Symbol&&t instanceof Symbol}function i(e){var t="undefined"==typeof e?"undefined":s(e);return Array.isArray(e)?"array":e instanceof RegExp?"object":o(t,e)?"symbol":t}function a(e){var t=i(e);if("object"===t){if(e instanceof Date)return"date";if(e instanceof RegExp)return"regexp"}return t}function u(e,t){return n(function(r,n,o,u,c){return(0,f.untracked)(function(){if(e&&i(r[n])===t.toLowerCase())return null;var u=void 0;switch(t){case"Array":u=f.isObservableArray;break;case"Object":u=f.isObservableObject;break;case"Map":u=f.isObservableMap;break;default:throw new Error("Unexpected mobxType: "+t)}var s=r[n];if(!u(s)){var l=a(s),p=e?" or javascript `"+t.toLowerCase()+"`":"";return new Error("Invalid prop `"+c+"` of type `"+l+"` supplied to `"+o+"`, expected `mobx.Observable"+t+"`"+p+".")}return null})})}function c(e,t){return n(function(r,n,o,i,a){return(0,f.untracked)(function(){if("function"!=typeof t)return new Error("Property `"+a+"` of component `"+o+"` has invalid PropType notation.");var c=u(e,"Array")(r,n,o);if(c instanceof Error)return c;for(var s=r[n],f=0;f<s.length;f++)if(c=t(s,f,o,i,a+"["+f+"]"),c instanceof Error)return c;return null})})}Object.defineProperty(t,"__esModule",{value:!0}),t.objectOrObservableObject=t.arrayOrObservableArrayOf=t.arrayOrObservableArray=t.observableObject=t.observableMap=t.observableArrayOf=t.observableArray=void 0;var s="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol?"symbol":typeof e},f=r(2);t.observableArray=u(!1,"Array"),t.observableArrayOf=c.bind(null,!1),t.observableMap=u(!1,"Map"),t.observableObject=u(!1,"Object"),t.arrayOrObservableArray=u(!0,"Array"),t.arrayOrObservableArrayOf=c.bind(null,!0),t.objectOrObservableObject=u(!0,"Object")}])});
 
 /***/ },
 /* 178 */
@@ -21681,6 +21686,50 @@
 	    getAdministration: getAdministration,
 	    resetGlobalState: resetGlobalState
 	};
+	var actionFieldDecorator = createClassPropertyDecorator(function (target, key, value, args, originalDescriptor) {
+	    var actionName = (args && args.length === 1) ? args[0] : (value.name || key || "<unnamed action>");
+	    var wrappedAction = action(actionName, value);
+	    addHiddenProp(target, key, wrappedAction);
+	}, function (key) {
+	    return this[key];
+	}, function () {
+	    invariant(false, "It is not allowed to assign new values to @action fields");
+	}, false, true);
+	function action(arg1, arg2, arg3, arg4) {
+	    if (arguments.length === 1 && typeof arg1 === "function")
+	        return createAction(arg1.name || "<unnamed action>", arg1);
+	    if (arguments.length === 2 && typeof arg2 === "function")
+	        return createAction(arg1, arg2);
+	    if (arguments.length === 1 && typeof arg1 === "string")
+	        return namedActionDecorator(arg1);
+	    return namedActionDecorator(arg2).apply(null, arguments);
+	}
+	exports.action = action;
+	function namedActionDecorator(name) {
+	    return function (target, prop, descriptor) {
+	        if (descriptor && typeof descriptor.value === "function") {
+	            descriptor.value = createAction(name, descriptor.value);
+	            descriptor.enumerable = false;
+	            descriptor.configurable = true;
+	            return descriptor;
+	        }
+	        return actionFieldDecorator(name).apply(this, arguments);
+	    };
+	}
+	function runInAction(arg1, arg2, arg3) {
+	    var actionName = typeof arg1 === "string" ? arg1 : arg1.name || "<unnamed action>";
+	    var fn = typeof arg1 === "function" ? arg1 : arg2;
+	    var scope = typeof arg1 === "function" ? arg2 : arg3;
+	    invariant(typeof fn === "function", "`runInAction` expects a function");
+	    invariant(fn.length === 0, "`runInAction` expects a function without arguments");
+	    invariant(typeof actionName === "string" && actionName.length > 0, "actions should have valid names, got: '" + actionName + "'");
+	    return executeAction(actionName, fn, scope, undefined);
+	}
+	exports.runInAction = runInAction;
+	function isAction(thing) {
+	    return typeof thing === "function" && thing.isMobxAction === true;
+	}
+	exports.isAction = isAction;
 	function autorun(arg1, arg2, arg3) {
 	    var name, view, scope;
 	    if (typeof arg1 === "string") {
@@ -21835,6 +21884,7 @@
 	}
 	exports.reaction = reaction;
 	var computedDecorator = createClassPropertyDecorator(function (target, name, _, decoratorArgs, originalDescriptor) {
+	    invariant(typeof originalDescriptor !== "undefined", "@computed can only be used on getter functions, like: '@computed get myProps() { return ...; }'. It looks like it was used on a property.");
 	    var baseValue = originalDescriptor.get;
 	    invariant(typeof baseValue === "function", "@computed can only be used on getter functions, like: '@computed get myProps() { return ...; }'");
 	    var compareStructural = false;
@@ -22158,60 +22208,16 @@
 	        invariant(false, "whyRun can only be used on reactions and computed values");
 	}
 	exports.whyRun = whyRun;
-	var actionFieldDecorator = createClassPropertyDecorator(function (target, key, value, args, originalDescriptor) {
-	    var actionName = (args && args.length === 1) ? args[0] : (value.name || key || "<unnamed action>");
-	    var wrappedAction = action(actionName, value);
-	    addHiddenProp(target, key, wrappedAction);
-	}, function (key) {
-	    return this[key];
-	}, function () {
-	    invariant(false, "It is not allowed to assign new values to @action fields");
-	}, false, true);
-	function action(arg1, arg2, arg3, arg4) {
-	    if (arguments.length === 1 && typeof arg1 === "function")
-	        return actionImplementation(arg1.name || "<unnamed action>", arg1);
-	    if (arguments.length === 2 && typeof arg2 === "function")
-	        return actionImplementation(arg1, arg2);
-	    if (arguments.length === 1 && typeof arg1 === "string")
-	        return namedActionDecorator(arg1);
-	    return namedActionDecorator(arg2).apply(null, arguments);
-	}
-	exports.action = action;
-	function namedActionDecorator(name) {
-	    return function (target, prop, descriptor) {
-	        if (descriptor && typeof descriptor.value === "function") {
-	            descriptor.value = actionImplementation(name, descriptor.value);
-	            descriptor.enumerable = false;
-	            descriptor.configurable = true;
-	            return descriptor;
-	        }
-	        return actionFieldDecorator(name).apply(this, arguments);
-	    };
-	}
-	function isAction(thing) {
-	    return typeof thing === "function" && thing.isMobxAction === true;
-	}
-	exports.isAction = isAction;
-	function runInAction(arg1, arg2, arg3) {
-	    var actionName = typeof arg1 === "string" ? arg1 : arg1.name || "<unnamed action>";
-	    var fn = typeof arg1 === "function" ? arg1 : arg2;
-	    var scope = typeof arg1 === "function" ? arg2 : arg3;
-	    invariant(typeof fn === "function", "`runInAction` expects a function");
-	    invariant(fn.length === 0, "`runInAction` expects a function without arguments");
-	    invariant(typeof actionName === "string" && actionName.length > 0, "actions should have valid names, got: '" + actionName + "'");
-	    return executeWrapped(actionName, fn, scope, undefined);
-	}
-	exports.runInAction = runInAction;
-	function actionImplementation(actionName, fn) {
+	function createAction(actionName, fn) {
 	    invariant(typeof fn === "function", "`action` can only be invoked on functions");
 	    invariant(typeof actionName === "string" && actionName.length > 0, "actions should have valid names, got: '" + actionName + "'");
 	    var res = function () {
-	        return executeWrapped(actionName, fn, this, arguments);
+	        return executeAction(actionName, fn, this, arguments);
 	    };
 	    res.isMobxAction = true;
 	    return res;
 	}
-	function executeWrapped(actionName, fn, scope, args) {
+	function executeAction(actionName, fn, scope, args) {
 	    var ds = globalState.derivationStack;
 	    invariant(!(ds[ds.length - 1] instanceof ComputedValue), "Computed values or transformers should not invoke actions or trigger other side effects");
 	    var notifySpy = isSpyEnabled();
@@ -22524,7 +22530,8 @@
 	        if (hasException) {
 	            var message = ("[mobx] An uncaught exception occurred while calculating your computed value, autorun or transformer. Or inside the render() method of an observer based React component. " +
 	                "These functions should never throw exceptions as MobX will not always be able to recover from them. " +
-	                ("Please fix the error reported after this message or enable 'Pause on (caught) exceptions' in your debugger to find the root cause. In: '" + derivation.name + "'"));
+	                ("Please fix the error reported after this message or enable 'Pause on (caught) exceptions' in your debugger to find the root cause. In: '" + derivation.name + "'. ") +
+	                "For more details see https://github.com/mobxjs/mobx/issues/462");
 	            if (isSpyEnabled()) {
 	                spyReport({
 	                    type: "error",
@@ -23164,6 +23171,14 @@
 	    ObservableArray.prototype.clear = function () {
 	        return this.splice(0);
 	    };
+	    ObservableArray.prototype.concat = function () {
+	        var arrays = [];
+	        for (var _i = 0; _i < arguments.length; _i++) {
+	            arrays[_i - 0] = arguments[_i];
+	        }
+	        this.$mobx.atom.reportObserved();
+	        return Array.prototype.concat.apply(this.slice(), arrays.map(function (a) { return isObservableArray(a) ? a.slice() : a; }));
+	    };
 	    ObservableArray.prototype.replace = function (newItems) {
 	        return this.$mobx.spliceWithArray(0, this.$mobx.values.length, newItems);
 	    };
@@ -23257,6 +23272,7 @@
 	    "constructor",
 	    "observe",
 	    "clear",
+	    "concat",
 	    "replace",
 	    "toJSON",
 	    "peek",
@@ -23283,7 +23299,6 @@
 	    }
 	});
 	[
-	    "concat",
 	    "every",
 	    "filter",
 	    "forEach",
@@ -28256,7 +28271,7 @@
 	      return React.createElement(
 	        _mobxReact.Provider,
 	        { mainStore: _stores.MainStore },
-	        React.createElement(_components.Main, null)
+	        React.createElement(_components.Main, { main: true })
 	      );
 	    }
 	  }]);
@@ -28299,9 +28314,11 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _desc, _value, _class, _descriptor, _desc2, _value2, _class3, _descriptor2, _descriptor3;
+	var _desc, _value, _class, _descriptor;
 	
 	var _mobx = __webpack_require__(178);
+	
+	var _classes = __webpack_require__(238);
 	
 	function _initDefineProp(target, property, descriptor, context) {
 	  if (!descriptor) return;
@@ -28358,7 +28375,12 @@
 	  _createClass(MainStore, [{
 	    key: "addTemp",
 	    value: function addTemp(temp, loc) {
-	      this.temp.push(new Temp(temp, loc));
+	      this.temp.push(new _classes.Temp(temp, loc));
+	    }
+	  }, {
+	    key: "clearStore",
+	    value: function clearStore() {
+	      this.temp = [];
 	    }
 	  }, {
 	    key: "getTemperatures",
@@ -28373,8 +28395,91 @@
 	  initializer: function initializer() {
 	    return [];
 	  }
-	}), _applyDecoratedDescriptor(_class.prototype, "getTemperatures", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "getTemperatures"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addTemp", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "addTemp"), _class.prototype)), _class)();
-	var Temp = (_class3 = function () {
+	}), _applyDecoratedDescriptor(_class.prototype, "getTemperatures", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "getTemperatures"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "addTemp", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "addTemp"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "clearStore", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "clearStore"), _class.prototype)), _class)();
+	module.exports = exports['default'];
+
+/***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.Temp = undefined;
+	
+	var _temp = __webpack_require__(239);
+	
+	var _temp2 = _interopRequireDefault(_temp);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.Temp = _temp2.default;
+
+/***/ },
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _desc, _value, _class, _descriptor, _descriptor2;
+	
+	var _mobx = __webpack_require__(178);
+	
+	function _initDefineProp(target, property, descriptor, context) {
+	  if (!descriptor) return;
+	  Object.defineProperty(target, property, {
+	    enumerable: descriptor.enumerable,
+	    configurable: descriptor.configurable,
+	    writable: descriptor.writable,
+	    value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+	  });
+	}
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+	  var desc = {};
+	  Object['ke' + 'ys'](descriptor).forEach(function (key) {
+	    desc[key] = descriptor[key];
+	  });
+	  desc.enumerable = !!desc.enumerable;
+	  desc.configurable = !!desc.configurable;
+	
+	  if ('value' in desc || desc.initializer) {
+	    desc.writable = true;
+	  }
+	
+	  desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+	    return decorator(target, property, desc) || desc;
+	  }, desc);
+	
+	  if (context && desc.initializer !== void 0) {
+	    desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+	    desc.initializer = undefined;
+	  }
+	
+	  if (desc.initializer === void 0) {
+	    Object['define' + 'Property'](target, property, desc);
+	    desc = null;
+	  }
+	
+	  return desc;
+	}
+	
+	function _initializerWarningHelper(descriptor, context) {
+	  throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+	}
+	
+	var Temp = (_class = function () {
 	  _createClass(Temp, [{
 	    key: "getTemperature",
 	    get: function get() {
@@ -28385,9 +28490,9 @@
 	  function Temp(temperature, location) {
 	    _classCallCheck(this, Temp);
 	
-	    _initDefineProp(this, "temperature", _descriptor2, this);
+	    _initDefineProp(this, "temperature", _descriptor, this);
 	
-	    _initDefineProp(this, "location", _descriptor3, this);
+	    _initDefineProp(this, "location", _descriptor2, this);
 	
 	    this.temperature = temperature;
 	    this.location = location;
@@ -28406,21 +28511,22 @@
 	  }]);
 	
 	  return Temp;
-	}(), (_descriptor2 = _applyDecoratedDescriptor(_class3.prototype, "temperature", [_mobx.observable], {
+	}(), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "temperature", [_mobx.observable], {
 	  enumerable: true,
 	  initializer: function initializer() {
 	    return 0;
 	  }
-	}), _descriptor3 = _applyDecoratedDescriptor(_class3.prototype, "location", [_mobx.observable], {
+	}), _descriptor2 = _applyDecoratedDescriptor(_class.prototype, "location", [_mobx.observable], {
 	  enumerable: true,
 	  initializer: function initializer() {
 	    return '';
 	  }
-	}), _applyDecoratedDescriptor(_class3.prototype, "getTemperature", [_mobx.computed], Object.getOwnPropertyDescriptor(_class3.prototype, "getTemperature"), _class3.prototype), _applyDecoratedDescriptor(_class3.prototype, "upTemperature", [_mobx.action], Object.getOwnPropertyDescriptor(_class3.prototype, "upTemperature"), _class3.prototype), _applyDecoratedDescriptor(_class3.prototype, "downTemperature", [_mobx.action], Object.getOwnPropertyDescriptor(_class3.prototype, "downTemperature"), _class3.prototype)), _class3);
+	}), _applyDecoratedDescriptor(_class.prototype, "getTemperature", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "getTemperature"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "upTemperature", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "upTemperature"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "downTemperature", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "downTemperature"), _class.prototype)), _class);
+	exports.default = Temp;
 	module.exports = exports['default'];
 
 /***/ },
-/* 238 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(React) {'use strict';
@@ -28434,9 +28540,9 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _reactMotion = __webpack_require__(239);
+	var _reactMotion = __webpack_require__(241);
 	
-	var _animaze = __webpack_require__(253);
+	var _animaze = __webpack_require__(255);
 	
 	var _animaze2 = _interopRequireDefault(_animaze);
 	
@@ -28623,7 +28729,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(168)))
 
 /***/ },
-/* 239 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28632,34 +28738,34 @@
 	
 	function _interopRequire(obj) { return obj && obj.__esModule ? obj['default'] : obj; }
 	
-	var _Motion = __webpack_require__(240);
+	var _Motion = __webpack_require__(242);
 	
 	exports.Motion = _interopRequire(_Motion);
 	
-	var _StaggeredMotion = __webpack_require__(247);
+	var _StaggeredMotion = __webpack_require__(249);
 	
 	exports.StaggeredMotion = _interopRequire(_StaggeredMotion);
 	
-	var _TransitionMotion = __webpack_require__(248);
+	var _TransitionMotion = __webpack_require__(250);
 	
 	exports.TransitionMotion = _interopRequire(_TransitionMotion);
 	
-	var _spring = __webpack_require__(250);
+	var _spring = __webpack_require__(252);
 	
 	exports.spring = _interopRequire(_spring);
 	
-	var _presets = __webpack_require__(251);
+	var _presets = __webpack_require__(253);
 	
 	exports.presets = _interopRequire(_presets);
 	
 	// deprecated, dummy warning function
 	
-	var _reorderKeys = __webpack_require__(252);
+	var _reorderKeys = __webpack_require__(254);
 	
 	exports.reorderKeys = _interopRequire(_reorderKeys);
 
 /***/ },
-/* 240 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28670,27 +28776,27 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _mapToZero = __webpack_require__(241);
+	var _mapToZero = __webpack_require__(243);
 	
 	var _mapToZero2 = _interopRequireDefault(_mapToZero);
 	
-	var _stripStyle = __webpack_require__(242);
+	var _stripStyle = __webpack_require__(244);
 	
 	var _stripStyle2 = _interopRequireDefault(_stripStyle);
 	
-	var _stepper3 = __webpack_require__(243);
+	var _stepper3 = __webpack_require__(245);
 	
 	var _stepper4 = _interopRequireDefault(_stepper3);
 	
-	var _performanceNow = __webpack_require__(244);
+	var _performanceNow = __webpack_require__(246);
 	
 	var _performanceNow2 = _interopRequireDefault(_performanceNow);
 	
-	var _raf = __webpack_require__(245);
+	var _raf = __webpack_require__(247);
 	
 	var _raf2 = _interopRequireDefault(_raf);
 	
-	var _shouldStopAnimation = __webpack_require__(246);
+	var _shouldStopAnimation = __webpack_require__(248);
 	
 	var _shouldStopAnimation2 = _interopRequireDefault(_shouldStopAnimation);
 	
@@ -28905,7 +29011,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 241 */
+/* 243 */
 /***/ function(module, exports) {
 
 	
@@ -28929,7 +29035,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 242 */
+/* 244 */
 /***/ function(module, exports) {
 
 	
@@ -28955,7 +29061,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 243 */
+/* 245 */
 /***/ function(module, exports) {
 
 	
@@ -29003,7 +29109,7 @@
 	// array reference around.
 
 /***/ },
-/* 244 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {// Generated by CoffeeScript 1.7.1
@@ -29042,10 +29148,10 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 245 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var now = __webpack_require__(244)
+	/* WEBPACK VAR INJECTION */(function(global) {var now = __webpack_require__(246)
 	  , root = typeof window === 'undefined' ? global : window
 	  , vendors = ['moz', 'webkit']
 	  , suffix = 'AnimationFrame'
@@ -29121,7 +29227,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 246 */
+/* 248 */
 /***/ function(module, exports) {
 
 	
@@ -29157,7 +29263,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 247 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29168,27 +29274,27 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _mapToZero = __webpack_require__(241);
+	var _mapToZero = __webpack_require__(243);
 	
 	var _mapToZero2 = _interopRequireDefault(_mapToZero);
 	
-	var _stripStyle = __webpack_require__(242);
+	var _stripStyle = __webpack_require__(244);
 	
 	var _stripStyle2 = _interopRequireDefault(_stripStyle);
 	
-	var _stepper3 = __webpack_require__(243);
+	var _stepper3 = __webpack_require__(245);
 	
 	var _stepper4 = _interopRequireDefault(_stepper3);
 	
-	var _performanceNow = __webpack_require__(244);
+	var _performanceNow = __webpack_require__(246);
 	
 	var _performanceNow2 = _interopRequireDefault(_performanceNow);
 	
-	var _raf = __webpack_require__(245);
+	var _raf = __webpack_require__(247);
 	
 	var _raf2 = _interopRequireDefault(_raf);
 	
-	var _shouldStopAnimation = __webpack_require__(246);
+	var _shouldStopAnimation = __webpack_require__(248);
 	
 	var _shouldStopAnimation2 = _interopRequireDefault(_shouldStopAnimation);
 	
@@ -29424,7 +29530,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 248 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29435,31 +29541,31 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _mapToZero = __webpack_require__(241);
+	var _mapToZero = __webpack_require__(243);
 	
 	var _mapToZero2 = _interopRequireDefault(_mapToZero);
 	
-	var _stripStyle = __webpack_require__(242);
+	var _stripStyle = __webpack_require__(244);
 	
 	var _stripStyle2 = _interopRequireDefault(_stripStyle);
 	
-	var _stepper3 = __webpack_require__(243);
+	var _stepper3 = __webpack_require__(245);
 	
 	var _stepper4 = _interopRequireDefault(_stepper3);
 	
-	var _mergeDiff = __webpack_require__(249);
+	var _mergeDiff = __webpack_require__(251);
 	
 	var _mergeDiff2 = _interopRequireDefault(_mergeDiff);
 	
-	var _performanceNow = __webpack_require__(244);
+	var _performanceNow = __webpack_require__(246);
 	
 	var _performanceNow2 = _interopRequireDefault(_performanceNow);
 	
-	var _raf = __webpack_require__(245);
+	var _raf = __webpack_require__(247);
 	
 	var _raf2 = _interopRequireDefault(_raf);
 	
-	var _shouldStopAnimation = __webpack_require__(246);
+	var _shouldStopAnimation = __webpack_require__(248);
 	
 	var _shouldStopAnimation2 = _interopRequireDefault(_shouldStopAnimation);
 	
@@ -29917,7 +30023,7 @@
 	// that you've unmounted but that's still animating. This is where it lives
 
 /***/ },
-/* 249 */
+/* 251 */
 /***/ function(module, exports) {
 
 	
@@ -30030,7 +30136,7 @@
 	// to loop through and find a key's index each time), but I no longer care
 
 /***/ },
-/* 250 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30043,7 +30149,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _presets = __webpack_require__(251);
+	var _presets = __webpack_require__(253);
 	
 	var _presets2 = _interopRequireDefault(_presets);
 	
@@ -30058,7 +30164,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 251 */
+/* 253 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -30073,7 +30179,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 252 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -30096,7 +30202,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 253 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var require;var require;(function(f){if(true){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.animaze = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return require(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -30146,16 +30252,23 @@
 	});
 
 /***/ },
-/* 254 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(React) {"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.default = undefined;
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(168);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -30169,30 +30282,46 @@
 	  function TestComponent() {
 	    _classCallCheck(this, TestComponent);
 	
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(TestComponent).apply(this, arguments));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TestComponent).call(this));
+	
+	    _this.state = {
+	      text: 'Old text',
+	      hColor: 'white'
+	    };
+	    return _this;
 	  }
 	
 	  _createClass(TestComponent, [{
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
-	      return React.createElement(
-	        "div",
+	      var _this2 = this;
+	
+	      return _react2.default.createElement(
+	        'div',
 	        null,
-	        React.createElement(
-	          "h1",
-	          null,
-	          "This is h1"
+	        _react2.default.createElement(
+	          'h1',
+	          { className: 'hello', style: { color: this.state.hColor } },
+	          this.state.text
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { onFocus: function onFocus() {
+	              return _this2.setState({ hColor: 'red' });
+	            }, onClick: function onClick() {
+	              return _this2.setState({ text: 'New text!' });
+	            } },
+	          'Add'
 	        )
 	      );
 	    }
 	  }]);
 	
 	  return TestComponent;
-	}(React.Component);
+	}(_react2.default.Component);
 	
 	exports.default = TestComponent;
 	module.exports = exports['default'];
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(168)))
 
 /***/ }
 /******/ ]);
