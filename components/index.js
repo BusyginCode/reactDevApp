@@ -5,3 +5,6 @@ export Root from './root'
 export MyMotion from './motion'
 
 export TestComponent from './testComponent'
+
+export VictoryTest from './victoryTest'
+

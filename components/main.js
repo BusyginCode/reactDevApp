@@ -20,9 +20,16 @@ export default class Main extends React.Component {
     this.props.mainStore.addTemp(0, "Kiev");
   };
 
+  testFunc() {
+    console.log("hey")
+  }
+
   render() {
-    const r = <TempContainer key={ 277 } index={ 277 } temp={ {} } />
-    console.log(typeof r)
+    //const r = <TempContainer key={ 277 } index={ 277 } temp={ {} } />
+    //console.log(typeof r)
+    // const r = this.testFunc.bind(this, 2)
+    // r.require = () => {}
+    // console.log(r.require)
     return (
       <div>
         {
@@ -36,6 +43,8 @@ export default class Main extends React.Component {
     )
   }
 }
+
+
 
 @observer
 class TempContainer extends React.Component {

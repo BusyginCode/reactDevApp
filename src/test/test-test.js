@@ -51,12 +51,23 @@ describe ('Main', () => {
   it('Add temperature', () => {
     const buttonComponent = TestUtils.findRenderedDOMComponentWithClass(main, 'addButtons')
 
-    console.log(Object.keys(TestUtils.Simulate))
+    //console.log(Object.keys(TestUtils.Simulate))
 
     TestUtils.Simulate.click(buttonComponent)
     const temps = MainStore.getTemperatures.toJS()
     const lastTemp = temps[temps.length ? temps.length - 1 : temps.length]
     expect(lastTemp).toEqual(new Temp(0, 'Kiev'))
+  })
+
+  it('Test shallow', () => {
+    const shallowRenderer = TestUtils.createRenderer();
+    shallowRenderer.render(<TestComponent />);
+    const component = shallowRenderer.getRenderOutput();
+    //console.log(component.props.children)
+    // expect(component.props.children).toEqual([
+    //   <span className="heading">Title</span>,
+    //   <Subcomponent foo="bar" />
+    // ]);
   })
 
 })

@@ -1,3 +1,3 @@
-import { Root } from 'components'
+import { Root, VictoryTest } from 'components'
 
-ReactDOM.render(<Root />, document.getElementById("root"))
+ReactDOM.render(<VictoryTest />, document.getElementById("root"))

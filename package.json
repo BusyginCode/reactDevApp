@@ -7,7 +7,7 @@
     "markup": "cd frontend_new/ && babel-node --presets es2015 -- server.markup.js & cd frontend_new/gulp && gulp devWatch",
     "dev": "cd frontend_new/ && babel-node --presets es2015 -- server.dev.js",
     "components-test": "cd frontend_new/components/tests/ && webpack && mocha bundle.test.js",
-    "test": "karma start"
+    "test": "mocha -R nyan -w --check-leaks"
   },
   "dependencies": {
     "animaze": "0.0.3",
@@ -21,6 +21,7 @@
     "babel-preset-stage-0": "^6.3.13",
     "cross-env": "^1.0.8",
     "elemental": "^0.6.1",
+    "expect": "^1.20.2",
     "express": "^4.14.0",
     "karma": "^1.1.1",
     "karma-cli": "^1.0.1",
@@ -31,10 +32,12 @@
     "mobx": "^2.2.2",
     "mobx-react": "^3.3.1",
     "mobx-react-devtools": "^4.2.0",
+    "mocha": "^2.5.3",
     "react": "^15.2.1",
     "react-addons-test-utils": "^15.3.0",
     "react-dom": "^15.2.1",
     "react-motion": "^0.4.4",
+    "victory": "^0.10.4",
     "warning": "^3.0.0",
     "webpack": "^1.13.1"
   },
@@ -43,7 +46,7 @@
     "karma-mocha": "^0.1.10",
     "karma-sourcemap-loader": "^0.3.4",
     "less-plugin-clean-css": "^1.5.1",
-    "mocha": "^2.2.4",
+    "mocha": "^2.5.3",
     "react-addons-css-transition-group": "^15.3.0",
     "react-hot-loader": "^1.2.7",
     "react-tools": "^0.13.3",
