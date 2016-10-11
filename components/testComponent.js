@@ -11,6 +11,7 @@ import {
 } from "victory";
 import {XYPlot, XAxis, YAxis, HorizontalGridLines, LineMarkSeries} from 'react-vis';
 import Graph from'./react-graph';
+import randomcolor from 'randomcolor'
 
 const CatPoint = ({ x, y, datum }) => 
   <svg>
@@ -59,11 +60,26 @@ export default class TestComponent extends React.Component {
     }
     var data1 = {
       nodes: [
-        {id: 101, label: 'Вася Пупкин'},
-        {id: 102, label: 'Света Аникеева'},
-        {id: 103, label: 'Алексанрд Драч'},
-        {id: 104, label: 'Владимир Великий'},
-        {id: 105, label: 'Просто Крутой'}
+        {id: 101, label: 'Вася Пупкин', borderWidth: 0 ,color: {background: randomcolor(), border: randomcolor() }},
+        {id: 102, label: 'Света Аникеева', color: randomcolor()},
+        {id: 103, label: 'Алексанрд Драч', color: randomcolor()},
+        {id: 104, label: 'Владимир Великий', color: randomcolor()},
+        {id: 105, label: 'Просто Крутой', color: randomcolor()},
+        {id: 106, label: 'Вася Пупкин', color: randomcolor()},
+        {id: 107, label: 'Света Аникеева', color: randomcolor()},
+        {id: 108, label: 'Алексанрд Драч', color: randomcolor()},
+        {id: 109, label: 'Владимир Великий', color: randomcolor()},
+        {id: 110, label: 'Просто Крутой', color: randomcolor()},
+        {id: 111, label: 'Вася Пупкин', color: randomcolor()},
+        {id: 112, label: 'Света Аникеева', color: randomcolor()},
+        {id: 113, label: 'Алексанрд Драч', color: randomcolor()},
+        {id: 114, label: 'Владимир Великий', color: randomcolor()},
+        {id: 115, label: 'Просто Крутой', color: randomcolor()},
+        {id: 116, label: 'Вася Пупкин', color: randomcolor()},
+        {id: 117, label: 'Света Аникеева', color: randomcolor()},
+        {id: 118, label: 'Алексанрд Драч', color: randomcolor()},
+        {id: 119, label: 'Владимир Великий', color: randomcolor()},
+        {id: 120, label: 'Просто Крутой', color: randomcolor()}
       ],
       edges: [
         {from: 101, to: 102},
@@ -72,20 +88,44 @@ export default class TestComponent extends React.Component {
         {from: 101, to: 105},
         {from: 102, to: 101},
         {from: 102, to: 103},
-        {from: 102, to: 104},
+        {from: 102, to: 101},
         {from: 102, to: 105},
         {from: 103, to: 102},
         {from: 103, to: 101},
         {from: 103, to: 104},
         {from: 103, to: 105},
-        {from: 104, to: 102},
+        {from: 104, to: 105},
         {from: 104, to: 103},
         {from: 104, to: 101},
         {from: 104, to: 105},
-        {from: 105, to: 102},
+        {from: 105, to: 104},
         {from: 105, to: 103},
         {from: 105, to: 104},
-        {from: 105, to: 101}
+        {from: 105, to: 101},
+
+        {from: 106, to: 102},
+        {from: 106, to: 103},
+        {from: 106, to: 104},
+        {from: 107, to: 105},
+        {from: 107, to: 101},
+        {from: 107, to: 103},
+        {from: 107, to: 101},
+        {from: 108, to: 105},
+        {from: 108, to: 102},
+        {from: 109, to: 101},
+        {from: 110, to: 104},
+        {from: 111, to: 105},
+        {from: 112, to: 105},
+        {from: 113, to: 103},
+        {from: 113, to: 101},
+        {from: 113, to: 105},
+        {from: 114, to: 104},
+        {from: 115, to: 103},
+        {from: 116, to: 104},
+        {from: 117, to: 101},
+        {from: 118, to: 103},
+        {from: 119, to: 104},
+        {from: 120, to: 101}
       ]
     };
     const data = [
@@ -103,7 +143,7 @@ export default class TestComponent extends React.Component {
       <div>
         <h1 className="hello">Graph</h1>
         
-        <Graph graph={data1} style={{ position: 'absolute', width: 100 + '%', height: 100 + '%' }} />
+        <Graph graph={data1} style={{ position: 'absolute', width: 100 + '%', height: 80 + '%' }} />
       </div>
     )
   }

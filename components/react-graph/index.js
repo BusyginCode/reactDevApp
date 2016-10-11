@@ -1,4 +1,5 @@
 import {default as React, Component} from 'react';
+import randomcolor from 'randomcolor'
 const vis = require('vis');
 const uuid = require('uuid');
 
@@ -29,6 +30,14 @@ class Graph extends Component {
   updateGraph() {
     let container = document.getElementById(this.state.identifier);
     var options = {
+      edges: {
+        color: {
+          inherit: true
+        },
+        width: 0.5,
+        arrowScaleFactor: 0.5,
+        style: 'arrow'
+      },
       nodes:{
         borderWidth: 1,
         borderWidthSelected: 2,

@@ -1,5 +1,5 @@
 import { Motion, spring, StaggeredMotion, TransitionMotion, presets } from 'react-motion'
-import animaze from 'animaze';
+//import animaze from 'animaze';
 
 export default class MyMotion extends React.Component {
 
