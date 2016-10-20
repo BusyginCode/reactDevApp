@@ -35,24 +35,6 @@ export default (function() {
     "COUPON_WRT_PAGES":     10
   };
 
-  // for new architecture
-  // ===============================================
-
-  // var SERVICE_LIMIT = 5 // can get from API
-
-  // var NEW_PRICE_PER_PAGE = 40 // can get from API
-
-  var getPricePerServicePage = function(service, serviceValue, serviceLimit) {
-    if (serviceValue > serviceLimit) {
-      switch(service) {
-        case 'pages': return NEW_PRICE_PER_PAGE
-      }
-    }
-    return 0
-  }
-
-  // ===============================================
-
   /**
    * Calculate Raw Base Cost
    * @param {FormState} formState
@@ -68,23 +50,44 @@ export default (function() {
 
     var basePagesCost = 0;
     var additionalPagesCost = 0;
+
+    var baseSlidesCost = 0;
+    var additionalSlidesCost = 0;
+
+    var baseChartsCost = 0;
+    var additionalChartsCost = 0;
     
-    (function() {
-      var spacing_factor = (formState.spacing == "single") ? 2 : 1;
-      var pagesPrice = additionalServices.deadlinePricePerPage  // getPricePerServicePage('pages', additionalServices.pages + formState.pages, SERVICE_LIMIT) ||  to begin of if
-      if (formState.pages && pagesPrice) {
-        basePagesCost = normalizePrice(formState.deadlinePricePerPage * formState.pages * spacing_factor);
-        additionalPagesCost = ((formState.pages + additionalServices.pages) * pagesPrice) - basePagesCost;
-      }
-    })();
+    var spacing_factor = (formState.spacing == "single") ? 2 : 1;
 
-    // slides, charts similarly
+    if (formState.pages || additionalServices.pages) {
+      basePagesCost = normalizePrice(formState.deadlinePricePerPage * formState.pages * spacing_factor);
+      additionalPagesCost = ((formState.pages + additionalServices.pages) * additionalServices.deadlinePricePerPage * spacing_factor);
+    }
 
-    cost.basePagesCost = basePagesCost || 0;
-    cost.additionalPagesCost = additionalPagesCost > 0 ? additionalPagesCost : 0;
-    cost.baseCost = normalizePrice(cost.basePagesCost);
-    cost.additionalCost = normalizePrice(cost.additionalPagesCost);
-    cost.allBaseCost = normalizePrice((cost.basePagesCost + cost.additionalPagesCost));
+    if (formState.slides || additionalServices.slides) {
+      baseSlidesCost = normalizePrice(formState.deadlinePricePerPage * formState.slides * 0.5);
+      additionalSlidesCost = ((formState.slides + additionalServices.slides) * additionalServices.deadlinePricePerPage * 0.5);
+    }
+
+    if (formState.charts || additionalServices.charts) {
+      baseChartsCost = normalizePrice(formState.deadlinePricePerPage * formState.charts * 0.5);
+      additionalChartsCost = ((formState.charts + additionalServices.charts) * additionalServices.deadlinePricePerPage * 0.5);
+    }
+
+    // slides, charts similarly  additionalCost
+
+    cost.basePagesCost = basePagesCost;
+    cost.baseSlidesCost = baseSlidesCost;
+    cost.baseChartsCost = baseChartsCost;
+
+    cost.additionalCost.basePagesCost = additionalPagesCost > 0 ? additionalPagesCost : 0;
+    cost.additionalCost.baseSlidesCost = additionalSlidesCost > 0 ? additionalSlidesCost : 0;
+    cost.additionalCost.baseChartsCost = additionalChartsCost > 0 ? additionalChartsCost : 0;
+
+
+    cost.baseCost = normalizePrice(cost.basePagesCost + cost.baseSlidesCost + cost.baseChartsCost);
+    cost.additionalCost.baseCost = normalizePrice(cost.additionalCost.basePagesCost + cost.additionalCost.baseSlidesCost + cost.additionalCost.baseChartsCost);
+
   };
 
   /**
@@ -103,18 +106,20 @@ export default (function() {
         if (coupon.type_id === COUPONS_TYPES_IDS.FREE_UNIT) {
           if (coupon["service_type_id"] == SERVICES_IDS.WRITING_PAGES) {
             baseCouponPagesReduction = normalizePrice(formState.deadlinePricePerPage * coupon.quantity * spacing_factor); 
-            additionalCouponPagesReduction = normalizePrice(insertData.additionalServices.deadlinePricePerPage * coupon.quantity * spacing_factor); // getPricePerServicePage('coupons', couponValue, SERVICE_LIMIT) || deadlinePricePerPage to begin of if
+            additionalCouponPagesReduction = normalizePrice(insertData.additionalServices.deadlinePricePerPage * coupon.quantity * spacing_factor);
             couponPagesQuantity = coupon.quantity;
             break;
           }
           break;
         }
       }
-    cost.baseCouponPagesReduction = normalizePrice(baseCouponPagesReduction);
-    cost.additionalCouponPagesReduction = normalizePrice(additionalCouponPagesReduction);
+    cost.couponPagesReduction = normalizePrice(baseCouponPagesReduction);
+    cost.additionalCost.couponPagesReduction = normalizePrice(additionalCouponPagesReduction);
+
     cost.couponPagesQuantity  = couponPagesQuantity;
+
     cost.baseCouponsReduction = normalizePrice(baseCouponPagesReduction);
-    cost.additionalCouponsReduction = normalizePrice(additionalCouponPagesReduction);
+    cost.additionalCost.baseCouponsReduction = normalizePrice(additionalCouponPagesReduction);
   };
 
   /**
@@ -130,99 +135,98 @@ export default (function() {
 
     // base calculating ==========================
 
-      var baseCostWithCoupons = cost.baseCost - cost.baseCouponsReduction;
+    var baseCostWithCoupons = cost.baseCost - cost.baseCouponsReduction;
 
-      // Calculate Get Samples Cost
-      var secondaryGetSamplesCost = formState.getSamplesOn == true ? PROVIDE_SAMPLES_PRICE : 0;
+    // Calculate Get Samples Cost
+    var secondaryGetSamplesCost = formState.getSamplesOn == true ? PROVIDE_SAMPLES_PRICE : 0;
 
-      // Calculate Progressive Delivery Price & Cost & availability;
-      var pdDisabled =
-          (cost.baseCost < 200 || formState.deadlineHrs < 120) && "Available for orders with a deadline of 5 days and longer, and with the value of $200 and more.";
-      var pdForced =
-          (cost.baseCost > 600 && formState.deadlineHrs >= 168) && "Mandatory for 7 days and longer, with the value of $600 and more.";
+    // Calculate Progressive Delivery Price & Cost & availability;
+    var pdDisabled =
+        (cost.baseCost < 200 || formState.deadlineHrs < 120) && "Available for orders with a deadline of 5 days and longer, and with the value of $200 and more.";
+    var pdForced =
+        (cost.baseCost > 600 && formState.deadlineHrs >= 168) && "Mandatory for 7 days and longer, with the value of $600 and more.";
 
-      var secondaryProgressiveDeliveryPrice = pdDisabled ? 0 : normalizePrice(baseCostWithCoupons * PROGRESSIVE_DELIVERY_PERCENT / 100);
-      var secondaryProgressiveDeliveryCost = (pdForced || formState.getProgressiveDeliveryOn) ? secondaryProgressiveDeliveryPrice : 0;
+    var secondaryProgressiveDeliveryPrice = pdDisabled ? 0 : normalizePrice(baseCostWithCoupons * PROGRESSIVE_DELIVERY_PERCENT / 100);
+    var secondaryProgressiveDeliveryCost = (pdForced || formState.getProgressiveDeliveryOn) ? secondaryProgressiveDeliveryPrice : 0;
 
-      // Calculate Writer Category Cost
-      var secondaryWriterCategoryCost = normalizePrice(baseCostWithCoupons * formState.writerPercent / 100);
+    // Calculate Writer Category Cost
+    var secondaryWriterCategoryCost = normalizePrice(baseCostWithCoupons * formState.writerPercent / 100);
 
-      // Calculate Used Sourse Price & Cost
-      var secondaryUsedSourcesPrice =  normalizePrice(
-          Math.max(USED_SOURCES_MIN_PRICE, baseCostWithCoupons * USED_SOURCES_PRICE_RATE)
-      );
-      var secondaryUsedSourcesCost = formState.getUsedSourcesOn ? secondaryUsedSourcesPrice : 0;
+    // Calculate Used Sourse Price & Cost
+    var secondaryUsedSourcesPrice =  normalizePrice(
+        Math.max(USED_SOURCES_MIN_PRICE, baseCostWithCoupons * USED_SOURCES_PRICE_RATE)
+    );
+    var secondaryUsedSourcesCost = formState.getUsedSourcesOn ? secondaryUsedSourcesPrice : 0;
 
-      // Calculate Complex Assignment Price & Cost
-      var secondaryComplexAssignmentPrice = normalizePrice(
-          Math.max((baseCostWithCoupons * COMPLEX_ASSIGNMENT_PERCENT) / 100)
-      );
-      var secondaryComplexAssignmentCost = formState.complexAssignmentDiscipline ? secondaryComplexAssignmentPrice : 0;
+    // Calculate Complex Assignment Price & Cost
+    var secondaryComplexAssignmentPrice = normalizePrice(
+        Math.max((baseCostWithCoupons * COMPLEX_ASSIGNMENT_PERCENT) / 100)
+    );
+    var secondaryComplexAssignmentCost = formState.complexAssignmentDiscipline ? secondaryComplexAssignmentPrice : 0;
 
-      cost.secondaryGetSamplesPrice = PROVIDE_SAMPLES_PRICE;
-      cost.secondaryGetSamplesCost = secondaryGetSamplesCost;
-      cost.secondaryProgressiveDeliveryPrice = secondaryProgressiveDeliveryPrice;
-      cost.secondaryProgressiveDeliveryPercent = PROGRESSIVE_DELIVERY_PERCENT;
-      cost.secondaryProgressiveDeliveryCost = secondaryProgressiveDeliveryCost;
-      cost.pdDisabled = pdDisabled;
-      cost.pdForced = pdForced;
-      cost.secondaryWriterCategoryCost = secondaryWriterCategoryCost;
-      cost.secondaryUsedSourcesPrice = secondaryUsedSourcesPrice;
-      cost.secondaryUsedSourcesCost = secondaryUsedSourcesCost;
-      cost.secondaryComplexAssignmentPrice = secondaryComplexAssignmentPrice;
-      cost.secondaryComplexAssignmentCost = secondaryComplexAssignmentCost;
-      cost.secondaryCost = normalizePrice(
-          secondaryUsedSourcesCost + secondaryGetSamplesCost +
-          secondaryProgressiveDeliveryCost + secondaryWriterCategoryCost +
-          secondaryComplexAssignmentCost
-      );
+    cost.secondaryGetSamplesPrice = PROVIDE_SAMPLES_PRICE;
+    cost.secondaryGetSamplesCost = secondaryGetSamplesCost;
+    cost.secondaryProgressiveDeliveryPrice = secondaryProgressiveDeliveryPrice;
+    cost.secondaryProgressiveDeliveryPercent = PROGRESSIVE_DELIVERY_PERCENT;
+    cost.secondaryProgressiveDeliveryCost = secondaryProgressiveDeliveryCost;
+    cost.pdDisabled = pdDisabled;
+    cost.pdForced = pdForced;
+    cost.secondaryWriterCategoryCost = secondaryWriterCategoryCost;
+    cost.secondaryUsedSourcesPrice = secondaryUsedSourcesPrice;
+    cost.secondaryUsedSourcesCost = secondaryUsedSourcesCost;
+    cost.secondaryComplexAssignmentPrice = secondaryComplexAssignmentPrice;
+    cost.secondaryComplexAssignmentCost = secondaryComplexAssignmentCost;
+    cost.secondaryCost = normalizePrice(
+        secondaryUsedSourcesCost + secondaryGetSamplesCost +
+        secondaryProgressiveDeliveryCost + secondaryWriterCategoryCost +
+        secondaryComplexAssignmentCost
+    );
 
     
     // additional calculating ==========================
 
-      var additionalCostWithCoupons = cost.allBaseCost - cost.additionalCouponsReduction;
+    var additionalCostWithCoupons = cost.additionalCost.baseCost - cost.additionalCost.baseCouponsReduction;
 
-      var additionalSecondaryGetSamplesCost = additionalServices.getSamplesOn == true ? PROVIDE_SAMPLES_PRICE : 0;
+    var additionalSecondaryGetSamplesCost = additionalServices.getSamplesOn == true ? PROVIDE_SAMPLES_PRICE : 0;
 
-      var additionalPdDisabled =
-          (cost.allBaseCost < 200 || additionalServices.deadlineHrs < 120) && "Available for orders with a deadline of 5 days and longer, and with the value of $200 and more.";
-      var additionalPdForced =
-          (cost.allBaseCost > 600 && additionalServices.deadlineHrs >= 168) && "Mandatory for 7 days and longer, with the value of $600 and more.";
-      
-      var additionalSecondaryProgressiveDeliveryPrice = additionalPdDisabled ? 0 : normalizePrice(additionalCostWithCoupons * PROGRESSIVE_DELIVERY_PERCENT / 100);
-      var additionalSecondaryProgressiveDeliveryCost = (additionalPdForced || additionalServices.getProgressiveDeliveryOn) ? additionalSecondaryProgressiveDeliveryPrice : 0;
+    var additionalPdDisabled =
+        (cost.additionalCost.baseCost < 200 || additionalServices.deadlineHrs < 120) && "Available for orders with a deadline of 5 days and longer, and with the value of $200 and more.";
+    var additionalPdForced =
+        (cost.additionalCost.baseCost > 600 && additionalServices.deadlineHrs >= 168) && "Mandatory for 7 days and longer, with the value of $600 and more.";
+    
+    var additionalSecondaryProgressiveDeliveryPrice = additionalPdDisabled ? 0 : normalizePrice(additionalCostWithCoupons * PROGRESSIVE_DELIVERY_PERCENT / 100);
+    var additionalSecondaryProgressiveDeliveryCost = (additionalPdForced || additionalServices.getProgressiveDeliveryOn) ? additionalSecondaryProgressiveDeliveryPrice : 0;
 
-      var additionalSecondaryWriterCategoryCost = normalizePrice(additionalCostWithCoupons * additionalServices.writerPercent / 100);
+    var additionalSecondaryWriterCategoryCost = normalizePrice(additionalCostWithCoupons * additionalServices.writerPercent / 100);
 
-      var additionalSecondaryUsedSourcesPrice =  normalizePrice(
-          Math.max(USED_SOURCES_MIN_PRICE, additionalCostWithCoupons * USED_SOURCES_PRICE_RATE)
-      );
+    var additionalSecondaryUsedSourcesPrice =  normalizePrice(
+        Math.max(USED_SOURCES_MIN_PRICE, additionalCostWithCoupons * USED_SOURCES_PRICE_RATE)
+    );
+    var additionalSecondaryUsedSourcesCost = additionalServices.getUsedSourcesOn ? additionalSecondaryUsedSourcesPrice : 0;
 
-      var additionalSecondaryUsedSourcesCost = additionalServices.getUsedSourcesOn ? additionalSecondaryUsedSourcesPrice : 0;
+    var additionalSecondaryComplexAssignmentPrice = normalizePrice(
+        Math.max((additionalCostWithCoupons * COMPLEX_ASSIGNMENT_PERCENT) / 100)
+    );
 
-      var additionalSecondaryComplexAssignmentPrice = normalizePrice(
-          Math.max((additionalCostWithCoupons * COMPLEX_ASSIGNMENT_PERCENT) / 100)
-      );
+    var additionalSecondaryComplexAssignmentCost = formState.complexAssignmentDiscipline ? additionalSecondaryComplexAssignmentPrice : 0;
 
-      var additionalSecondaryComplexAssignmentCost = formState.complexAssignmentDiscipline ? additionalSecondaryComplexAssignmentPrice : 0;
-
-      cost.additionalSecondary = {}
-
-      cost.additionalSecondary.secondaryGetSamplesCost = additionalSecondaryGetSamplesCost;
-      cost.additionalSecondary.secondaryProgressiveDeliveryPrice = additionalSecondaryProgressiveDeliveryPrice;
-      cost.additionalSecondary.secondaryProgressiveDeliveryCost = additionalSecondaryProgressiveDeliveryCost;
-      cost.additionalSecondary.pdDisabled = additionalPdDisabled;
-      cost.additionalSecondary.pdForced = additionalPdForced;
-      cost.additionalSecondary.secondaryWriterCategoryCost = additionalSecondaryWriterCategoryCost;
-      cost.additionalSecondary.secondaryUsedSourcesPrice = additionalSecondaryUsedSourcesPrice;
-      cost.additionalSecondary.secondaryUsedSourcesCost = additionalSecondaryUsedSourcesCost;
-      cost.additionalSecondary.secondaryComplexAssignmentPrice = additionalSecondaryComplexAssignmentPrice;
-      cost.additionalSecondary.secondaryComplexAssignmentCost = additionalSecondaryComplexAssignmentCost;
-      cost.additionalSecondary.secondaryCost = normalizePrice(
-        additionalSecondaryUsedSourcesCost + additionalSecondaryGetSamplesCost +
-        additionalSecondaryProgressiveDeliveryCost + additionalSecondaryWriterCategoryCost +
-        additionalSecondaryComplexAssignmentCost
-      );
+    cost.additionalCost.secondaryGetSamplesPrice = PROVIDE_SAMPLES_PRICE;
+    cost.additionalCost.secondaryGetSamplesCost = additionalSecondaryGetSamplesCost;
+    cost.additionalCost.secondaryProgressiveDeliveryPrice = additionalSecondaryProgressiveDeliveryPrice;
+    cost.additionalCost.secondaryProgressiveDeliveryCost = additionalSecondaryProgressiveDeliveryCost;
+    cost.additionalCost.secondaryProgressiveDeliveryPercent = PROGRESSIVE_DELIVERY_PERCENT;
+    cost.additionalCost.pdDisabled = additionalPdDisabled;
+    cost.additionalCost.pdForced = additionalPdForced;
+    cost.additionalCost.secondaryWriterCategoryCost = additionalSecondaryWriterCategoryCost;
+    cost.additionalCost.secondaryUsedSourcesPrice = additionalSecondaryUsedSourcesPrice;
+    cost.additionalCost.secondaryUsedSourcesCost = additionalSecondaryUsedSourcesCost;
+    cost.additionalCost.secondaryComplexAssignmentPrice = additionalSecondaryComplexAssignmentPrice;
+    cost.additionalCost.secondaryComplexAssignmentCost = additionalSecondaryComplexAssignmentCost;
+    cost.additionalCost.secondaryCost = normalizePrice(
+      additionalSecondaryUsedSourcesCost + additionalSecondaryGetSamplesCost +
+      additionalSecondaryProgressiveDeliveryCost + additionalSecondaryWriterCategoryCost +
+      additionalSecondaryComplexAssignmentCost
+    );
 
   };
 
@@ -253,17 +257,17 @@ export default (function() {
         switch (coupon["service_type_id"]) {
           case SERVICES_IDS.PROVIDE_ME_SAMPLES:
             couponGetSamplesReduction += normalizePrice(cost.secondaryGetSamplesCost / 100 * coupon.value);
-            additionalCouponGetSamplesReduction += normalizePrice(cost.additionalSecondary.secondaryGetSamplesCost / 100 * coupon.value);
+            additionalCouponGetSamplesReduction += normalizePrice(cost.additionalCost.secondaryGetSamplesCost / 100 * coupon.value);
             break;
 
           case SERVICES_IDS.PROGRESSIVE_DELIVERY:
             couponProgressiveDeliveryReduction += normalizePrice(cost.secondaryProgressiveDeliveryCost / 100 * coupon.value);
-            additionalCouponProgressiveDeliveryReduction += normalizePrice(cost.additionalSecondary.secondaryProgressiveDeliveryCost / 100 * coupon.value);
+            additionalCouponProgressiveDeliveryReduction += normalizePrice(cost.additionalCost.secondaryProgressiveDeliveryCost / 100 * coupon.value);
             break;
 
           case SERVICES_IDS.USED_SOURCES:
             couponUsedSourcesReduction += normalizePrice(cost.secondaryUsedSourcesCost / 100 * coupon.value);
-            additionalCouponUsedSourcesReduction += normalizePrice(cost.additionalSecondary.secondaryUsedSourcesCost / 100 * coupon.value);
+            additionalCouponUsedSourcesReduction += normalizePrice(cost.additionalCost.secondaryUsedSourcesCost / 100 * coupon.value);
             break;
         }
       } else if (coupon.type_id === COUPONS_TYPES_IDS.CATEGORY_OF_WRITER) {
@@ -272,7 +276,7 @@ export default (function() {
             couponWriterCategoryReduction += cost.secondaryWriterCategoryCost;
           }
           if (additionalServices.writerCategoryId === coupon.writer_category_id) {
-            additionalCouponWriterCategoryReduction += cost.secondaryWriterCategoryCost;
+            additionalCouponWriterCategoryReduction += cost.additionalCost.secondaryWriterCategoryCost;
           }
         }
       }
@@ -287,14 +291,12 @@ export default (function() {
       couponUsedSourcesReduction + couponWriterCategoryReduction
     );
 
-    cost.additionalCoupon = {}
-
-    cost.additionalCoupon.couponGetSamplesReduction          = additionalCouponGetSamplesReduction;
-    cost.additionalCoupon.couponProgressiveDeliveryReduction = additionalCouponProgressiveDeliveryReduction;
-    cost.additionalCoupon.couponUsedSourcesReduction         = additionalCouponUsedSourcesReduction;
-    cost.additionalCoupon.couponWriterCategoryReduction      = additionalCouponWriterCategoryReduction;
-    cost.additionalCoupon.couponsReduction = normalizePrice(
-      cost.additionalCouponsReduction + additionalCouponGetSamplesReduction + additionalCouponProgressiveDeliveryReduction +
+    cost.additionalCost.couponGetSamplesReduction          = additionalCouponGetSamplesReduction;
+    cost.additionalCost.couponProgressiveDeliveryReduction = additionalCouponProgressiveDeliveryReduction;
+    cost.additionalCost.couponUsedSourcesReduction         = additionalCouponUsedSourcesReduction;
+    cost.additionalCost.couponWriterCategoryReduction      = additionalCouponWriterCategoryReduction;
+    cost.additionalCost.couponsReduction = normalizePrice(
+      cost.additionalCost.baseCouponsReduction + additionalCouponGetSamplesReduction + additionalCouponProgressiveDeliveryReduction +
       additionalCouponUsedSourcesReduction + additionalCouponWriterCategoryReduction
     );
   };
@@ -305,8 +307,9 @@ export default (function() {
    */
   var calculateDiscount = function(insertData, cost) {
     cost.discountPercent = insertData.formState.discountPercent;
-    cost.baseDiscountReduction = normalizePrice((cost.baseRawCost - cost.baseCouponsReduction) * insertData.formState.discountPercent / 100);
-    cost.additionalDiscountReduction = normalizePrice((cost.rawCost - cost.additionalCouponsReduction) * insertData.formState.discountPercent / 100);
+    cost.additionalCost.discountPercent = insertData.formState.discountPercent;
+    cost.discountReduction = normalizePrice((cost.rawCost - cost.baseCouponsReduction) * insertData.formState.discountPercent / 100);
+    cost.additionalCost.discountReduction = normalizePrice((cost.additionalCost.rawCost - cost.additionalCost.baseCouponsReduction) * insertData.formState.discountPercent / 100);
   };
 
   /**
@@ -441,7 +444,7 @@ export default (function() {
 
     /* GET DISCOUNT SERVICES */
 
-    if (cost.baseDiscountReduction > 0) {
+    if (cost.discountReduction > 0) {
       services.push({
         "quantity": 0,
         "type_id":  SERVICES_IDS.DISCOUNT,
@@ -480,34 +483,34 @@ export default (function() {
 
     /* GET BASE SERVICES */
 
-    if (cost.additionalPagesCost) {
+    if (cost.additionalCost.basePagesCost - cost.basePagesCost) {
       services.push({
         "quantity": additionalServices.pages,
         "title":    additionalServices.pages + " " + pluralize("page", additionalServices.pages) + " × $" + normalizePrice(additionalServices.deadlinePricePerPage),
         "type_id":  SERVICES_IDS.WRITING_PAGES,
-        "cost":     cost.additionalPagesCost,
+        "cost":     normalizePrice(cost.additionalCost.basePagesCost - cost.basePagesCost),
         "priority": 1,
         "free":     false
       });
     }
 
-    if (cost.additionalSlidesCost) {
+    if (cost.additionalCost.baseSlidesCost - cost.baseSlidesCost) {
       services.push({
         "quantity": additionalServices.slides,
         "type_id":  SERVICES_IDS.WRITING_SLIDES,
         "title":    "PowerPoint slides",
-        "cost":     cost.additionalSlidesCost,
+        "cost":     normalizePrice(cost.additionalCost.baseSlidesCost - cost.baseSlidesCost),
         "priority": 1,
         "free":     false
       });
     }
 
-    if (cost.additionalChartsCost) {
+    if (cost.additionalCost.baseChartsCost - cost.baseChartsCost) {
       services.push({
         "quantity": additionalServices.charts,
         "type_id":  SERVICES_IDS.WRITING_CHARTS,
         "title":    "Charts",
-        "cost":     cost.additionalChartsCost,
+        "cost":     normalizePrice(cost.additionalCost.baseChartsCost - cost.baseChartsCost),
         "priority": 1,
         "free":     false
       });
@@ -516,56 +519,56 @@ export default (function() {
 
     /* GET SECONDARY SERVICES */
 
-    if (cost.additionalSecondary.secondaryGetSamplesCost) {
+    if (cost.additionalCost.secondaryGetSamplesCost - cost.additionalCost.secondaryGetSamplesCost) {
       services.push({
         "quantity": 0,
         "type_id":  SERVICES_IDS.PROVIDE_ME_SAMPLES,
         "title":    "Order writer’s samples",
-        "cost":     cost.secondaryGetSamplesCost,
+        "cost":     normalizePrice(cost.additionalCost.secondaryGetSamplesCost - cost.additionalCost.secondaryGetSamplesCost),
         "priority": 3,
-        "free":     cost.freeThings.writerSamples && cost.couponGetSamplesReduction > 0
+        "free":     cost.freeThings.writerSamples && cost.additionalCost.couponGetSamplesReduction > 0
       });
     }
 
-    if (cost.additionalSecondary.secondaryProgressiveDeliveryCost) {
+    if (cost.additionalCost.secondaryProgressiveDeliveryCost - cost.secondaryProgressiveDeliveryCost) {
       services.push({
         "quantity": 0,
         "type_id":  SERVICES_IDS.PROGRESSIVE_DELIVERY,
         "title":    "Progressive delivery",
-        "cost":     cost.secondaryProgressiveDeliveryCost,
+        "cost":     normalizePrice(cost.additionalCost.secondaryProgressiveDeliveryCost - cost.secondaryProgressiveDeliveryCost),
         "priority": 2,
-        "free":     cost.freeThings.progressiveDelivery && cost.couponProgressiveDeliveryReduction > 0
+        "free":     cost.freeThings.progressiveDelivery && cost.additionalCost.couponProgressiveDeliveryReduction > 0
       });
     }
 
-    if (cost.additionalSecondary.secondaryWriterCategoryCost) {
+    if (cost.additionalCost.secondaryWriterCategoryCost - cost.secondaryWriterCategoryCost) {
       services.push({
         "quantity": 0,
         "type_id":  SERVICES_IDS.CHOOSE_WRITER,
         "title":    "Category of the writer",
-        "cost":     cost.secondaryWriterCategoryCost,
+        "cost":     normalizePrice(cost.additionalCost.secondaryWriterCategoryCost - cost.secondaryWriterCategoryCost),
         "priority": 2,
-        "free":     cost.couponWriterCategoryReduction > 0
+        "free":     cost.additionalCost.couponWriterCategoryReduction > 0
       });
     }
 
-    if (cost.additionalSecondary.secondaryUsedSourcesCost) {
+    if (cost.additionalCost.secondaryUsedSourcesCost - cost.secondaryUsedSourcesCost) {
       services.push({
         "quantity": 0,
         "type_id":  SERVICES_IDS.USED_SOURCES,
         "title":    "Copy of sources used",
-        "cost":     cost.secondaryUsedSourcesCost,
+        "cost":     normalizePrice(cost.additionalCost.secondaryUsedSourcesCost - cost.secondaryUsedSourcesCost),
         "priority": 2,
-        "free":     cost.freeThings.copyOfSources && cost.couponUsedSourcesReduction > 0
+        "free":     cost.freeThings.copyOfSources && cost.additionalCost.couponUsedSourcesReduction > 0
       });
     }
 
-    if (cost.additionalSecondary.secondaryComplexAssignmentCost) {
+    if (cost.additionalCost.secondaryComplexAssignmentCost - cost.secondaryComplexAssignmentCost) {
       services.push({
         "quantity": 0,
         "type_id":  SERVICES_IDS.COMPLEX_ASSIGNMENT,
         "title":    "Complex Assignment",
-        "cost":     cost.secondaryComplexAssignmentCost,
+        "cost":     normalizePrice(cost.additionalCost.secondaryComplexAssignmentCost - cost.secondaryComplexAssignmentCost),
         "priority": 2,
         "free":     false,
       });
@@ -574,12 +577,12 @@ export default (function() {
 
     /* GET DISCOUNT SERVICES */
 
-    if (cost.additionalDiscountReduction > 0) {
+    if (cost.additionalCost.discountReduction - cost.discountReduction) {
       services.push({
         "quantity": 0,
         "type_id":  SERVICES_IDS.DISCOUNT,
         "title":    "Discount",
-        "cost":     cost.discountReduction,
+        "cost":     normalizePrice(cost.additionalCost.discountReduction - cost.discountReduction),
         "priority": 8,
         "free":     false
       });
@@ -624,41 +627,40 @@ export default (function() {
         writerPercent:                      parseInt(formState.writerPercent)          || 0
       },
       additionalServices: {
-        pages:                              additionalState.pages || 0,
-        slides:                             additionalState.slides || 0,
-        charts:                             additionalState.charts || 0,
-        deadlinePricePerPage:               additionalState.deadlinePricePerPage || 0,
-        deadlineHrs:                        additionalState.deadlineHrs || 0,
-        getSamplesOn:                       additionalState.getSamplesOn || 0,
-        getProgressiveDeliveryOn:           additionalState.getProgressiveDeliveryOn || 0,
-        getUsedSourcesOn:                   additionalState.getUsedSourcesOn || 0,
-        writerPercent:                      additionalState.writerPercent || 0,
+        pages:                              parseInt(additionalState.pages) || 0,
+        slides:                             parseInt(additionalState.slides) || 0,
+        charts:                             parseInt(additionalState.charts) || 0,
+        deadlinePricePerPage:               parseFloat(additionalState.deadlinePricePerPage) || 0,
+        deadlineHrs:                        parseInt(additionalState.deadlineHrs) || 0,
+        getSamplesOn:                       Boolean(additionalState.getSamplesOn),
+        getProgressiveDeliveryOn:           Boolean(additionalState.getProgressiveDeliveryOn),
+        getUsedSourcesOn:                   Boolean(additionalState.getUsedSourcesOn),
+        writerPercent:                      parseInt(additionalState.writerPercent) || 0,
       }
     }
 
     var cost = {};
 
+    cost.additionalCost = {}
+
     calculateBase(insertData, cost);
     calculateBaseCoupons(insertData, cost);
     calculateSecondary(insertData, cost);
-    cost.baseRawCost = normalizePrice(cost.baseCost + cost.secondaryCost);
-    cost.rawCost = normalizePrice(cost.allBaseCost + cost.additionalSecondary.secondaryCost);
+    cost.rawCost = normalizePrice(cost.baseCost + cost.secondaryCost);
+    cost.additionalCost.rawCost = normalizePrice(cost.additionalCost.baseCost + cost.additionalCost.secondaryCost);
     calculateCoupons(insertData, cost);
     calculateDiscount(insertData, cost);
 
-    cost.baseTotalCost = normalizePrice(cost.baseRawCost - cost.baseDiscountReduction - cost.baseCouponsReduction);
+    cost.totalCost = normalizePrice(cost.rawCost - cost.discountReduction - cost.baseCouponsReduction);
+    cost.additionalCost.totalCost = normalizePrice(cost.additionalCost.rawCost - cost.additionalCost.discountReduction - cost.additionalCost.baseCouponsReduction);
 
-    cost.totalCost = normalizePrice(cost.rawCost - cost.additionalDiscountReduction - cost.additionalCouponsReduction);
-
-    cost.baseProgressiveDeliveryCost = normalizePrice(cost.secondaryProgressiveDeliveryCost - cost.couponProgressiveDeliveryReduction);
-
-    cost.progressiveDeliveryCost = normalizePrice(cost.additionalSecondary.secondaryProgressiveDeliveryCost - cost.additionalCoupon.couponProgressiveDeliveryReduction);
+    cost.progressiveDeliveryCost = normalizePrice(cost.secondaryProgressiveDeliveryCost - cost.couponProgressiveDeliveryReduction);
+    cost.additionalCost.progressiveDeliveryCost = normalizePrice(cost.additionalCost.secondaryProgressiveDeliveryCost - cost.additionalCost.couponProgressiveDeliveryReduction);
 
     cost.freeThings = calculateFreeThings(insertData.formState);
 
     cost.services = calculateServices(insertData.formState, cost);
-
-    cost.additionalServices = calculateAdditionalServices(insertData, cost);
+    cost.additionalCost.services = calculateAdditionalServices(insertData, cost);
 
     global.___cost___ = cost;
 
@@ -666,37 +668,3 @@ export default (function() {
   };
 
 })
-
-
-// baseChartsCost:8.5
-// baseCost:51
-// baseCouponsReduction:0
-// basePagesCost:34
-// baseSlidesCost:8.5
-// couponGetSamplesReduction:0
-// couponPagesQuantity:0
-// couponPagesReduction:0
-// couponProgressiveDeliveryReduction:0
-// couponUsedSourcesReduction:0
-// couponWriterCategoryReduction:0
-// couponsReduction:0
-// discountPercent:95
-// discountReduction:53.2
-// freeThings:Object
-// pdDisabled:"Available for orders with a deadline of 5 days and longer, and with the value of $200 and more."
-// pdForced:false
-// progressiveDeliveryCost:0
-// rawCost:56
-// secondaryComplexAssignmentCost:0
-// secondaryComplexAssignmentPrice:10.2
-// secondaryCost:5
-// secondaryGetSamplesCost:5
-// secondaryGetSamplesPrice:5
-// secondaryProgressiveDeliveryCost:0
-// secondaryProgressiveDeliveryPercent:10
-// secondaryProgressiveDeliveryPrice:0
-// secondaryUsedSourcesCost:0
-// secondaryUsedSourcesPrice:14.95
-// secondaryWriterCategoryCost:0
-// services:Array[5]
-// totalCost:2.8
