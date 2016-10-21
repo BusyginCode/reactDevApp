@@ -30261,14 +30261,14 @@
 	
 	    _this.calculate = function () {
 	      var insertFormData = {
-	        charts: 5,
+	        charts: 9,
 	        deadlineHrs: 168,
 	        deadlinePricePerPage: 17,
 	        discountPercent: 95,
 	        getProgressiveDeliveryOn: true,
 	        getSamplesOn: true,
 	        getUsedSourcesOn: true,
-	        pages: 2,
+	        pages: 5,
 	        slides: 6,
 	        spacing: 'double',
 	        winbackCoupons: [],
@@ -30276,15 +30276,16 @@
 	        writerPercent: 5
 	      };
 	      var insertAdditionalData = {
-	        charts: 3,
+	        charts: 1,
 	        deadlineHrs: 168,
 	        deadlinePricePerPage: 17,
 	        getProgressiveDeliveryOn: true,
 	        getSamplesOn: true,
 	        getUsedSourcesOn: true,
-	        pages: 3,
-	        slides: 4,
-	        writerPercent: 0
+	        pages: 5,
+	        slides: 6,
+	        writerCategoryId: 2,
+	        writerPercent: 5
 	      };
 	      console.log(window.UVOCostCalculator(insertFormData, insertAdditionalData));
 	    };
@@ -120691,13 +120692,130 @@
 
 	"use strict";
 	
+	/* ************************************************************** *
+	 *                                                                *
+	 *                          IMPORTANT!                            *
+	 *                                                                *
+	 *              This file is used by iOS native app.              *
+	 *                Please don't use jQuery and DOM.                *
+	 *                                                                *
+	 * ************************************************************** */
+	
+	/**
+	 ******************************************************************
+	 * Winback Coupon
+	 ******************************************************************
+	 * @typedef {{
+	 *     type_id:            number,
+	 *     value:              number|null,
+	 *     quantity:           number,
+	 *     service_type_id:    number,
+	 *     writer_category_id: number|null,
+	 * }} WinbackCoupon
+	 *
+	 * @type {Object}
+	 */
+	
+	/**
+	 ******************************************************************
+	 * FORM STATE
+	 ******************************************************************
+	 * @typedef {{
+	 *     pages:                    number,
+	 *     slides:                   number,
+	 *     discountPercent:          number,
+	 *     charts:                   number,
+	 *     winbackCoupons:           Array<WinbackCoupon>,
+	 *     writerCategoryId:         number|null,
+	 *     deadlinePricePerPage:     number,
+	 *     deadlineHrs:              number,
+	 *     spacing:                  string|null,
+	 *     getSamplesOn:             boolean,
+	 *     getProgressiveDeliveryOn: boolean,
+	 *     getUsedSourcesOn:         boolean,
+	 *     writerPercent:            number,
+	 * }} FormState
+	 *
+	 * @type {Object}
+	 */
+	
+	/**
+	 ******************************************************************
+	 * FREE THINGS
+	 ******************************************************************
+	 * @typedef {{
+	 *     pages:               number,
+	 *     slides:              number,
+	 *     charts:              number,
+	 *     progressiveDelivery: boolean,
+	 *     copyOfSources:       boolean,
+	 *     writerSamples:       boolean,
+	 *     categoriesOfWriter:  Array<number>,
+	 * }} FreeThings
+	 *
+	 * @type {Object}
+	 */
+	
+	/**
+	 ******************************************************************
+	 * COST INFO
+	 ******************************************************************
+	 * @typedef {{
+	 *     basePagesCost:                      number,
+	 *     baseSlidesCost:                     number,
+	 *     baseChartsCost:                     number,
+	 *     couponPagesQuantity:                number,
+	 *     baseCouponsReduction:               number,
+	 *     secondaryGetSamplesPrice:           number,
+	 *     secondaryGetSamplesCost:            number,
+	 *     secondaryProgressiveDeliveryPrice:  number,
+	 *     secondaryProgressiveDeliveryPercent:number,
+	 *     secondaryProgressiveDeliveryCost:   number,
+	 *     secondaryWriterCategoryCost:        number,
+	 *     secondaryUsedSourcesPrice:          number,
+	 *     secondaryUsedSourcesCost:           number,
+	 *     secondaryCost:                      number,
+	 *     couponGetSamplesReduction:          number,
+	 *     couponWriterCategoryReduction:      number,
+	 *     couponUsedSourcesReduction:         number,
+	 *     couponProgressiveDeliveryReduction: number,
+	 *     couponsReduction:                   number,
+	 *     discountPercent:                    number,
+	 *     discountReduction:                  number,
+	 *     rawCost:                            number,
+	 *     baseCost:                           number,
+	 *     totalCost:                          number,
+	 *     progressiveDeliveryCost:            number,
+	 *     pdDisabled:                         string|false,
+	 *     pdForced:                           string|false,
+	 *     freeThings:                         FreeThings,
+	 *     services:                           Array.<Service>
+	 * }} CostInfo
+	 * @type {Object}
+	 */
+	
+	/**
+	 ******************************************************************
+	 * SERVICE
+	 ******************************************************************
+	 * @typedef {{
+	 *     quantity: number,
+	 *     type_id:  number,
+	 *     title:    string,
+	 *     cost:     number,
+	 *     priority: number,
+	 *     free:     boolean,
+	 * }} Service
+	 * @type {Object}
+	 */
+	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	exports.default = function () {
+	exports.default = function ($, jQuery) {
 	
 	  var global = typeof self !== "undefined" && self != null && self.self === self && self || typeof global !== "undefined" && global != null && global.global === global && global || window;
 	
@@ -120734,7 +120852,7 @@
 	
 	  /**
 	   * Calculate Raw Base Cost
-	   * @param {FormState} formState
+	   * @param {FormState} insertData
 	   * @param {CostInfo} cost
 	   */
 	  var calculateBase = function calculateBase(insertData, cost) {
@@ -120758,17 +120876,17 @@
 	
 	    if (formState.pages || additionalServices.pages) {
 	      basePagesCost = normalizePrice(formState.deadlinePricePerPage * formState.pages * spacing_factor);
-	      additionalPagesCost = (formState.pages + additionalServices.pages) * additionalServices.deadlinePricePerPage * spacing_factor;
+	      additionalPagesCost = (formState.pages + additionalServices.pages) * additionalServices.deadlinePricePerPage * spacing_factor - basePagesCost;
 	    }
 	
 	    if (formState.slides || additionalServices.slides) {
 	      baseSlidesCost = normalizePrice(formState.deadlinePricePerPage * formState.slides * 0.5);
-	      additionalSlidesCost = (formState.slides + additionalServices.slides) * additionalServices.deadlinePricePerPage * 0.5;
+	      additionalSlidesCost = (formState.slides + additionalServices.slides) * additionalServices.deadlinePricePerPage * 0.5 - baseSlidesCost;
 	    }
 	
 	    if (formState.charts || additionalServices.charts) {
 	      baseChartsCost = normalizePrice(formState.deadlinePricePerPage * formState.charts * 0.5);
-	      additionalChartsCost = (formState.charts + additionalServices.charts) * additionalServices.deadlinePricePerPage * 0.5;
+	      additionalChartsCost = (formState.charts + additionalServices.charts) * additionalServices.deadlinePricePerPage * 0.5 - baseChartsCost;
 	    }
 	
 	    // slides, charts similarly  additionalCost
@@ -120787,7 +120905,7 @@
 	
 	  /**
 	   * Calculate Coupon for pages
-	   * @param {FormState} formState
+	   * @param {FormState} insertData
 	   * @param {CostInfo} cost
 	   */
 	  var calculateBaseCoupons = function calculateBaseCoupons(insertData, cost) {
@@ -120819,7 +120937,7 @@
 	
 	  /**
 	   * Calculate Raw Secondary Cost
-	   * @param {FormState} formState
+	   * @param {FormState} insertData
 	   * @param {CostInfo} cost
 	   */
 	  var calculateSecondary = function calculateSecondary(insertData, cost) {
@@ -120904,7 +121022,7 @@
 	  };
 	
 	  /**
-	   * @param {FormState} formState
+	   * @param {FormState} insertData
 	   * @param {CostInfo} cost
 	   */
 	  var calculateCoupons = function calculateCoupons(insertData, cost) {
@@ -120968,7 +121086,7 @@
 	  };
 	
 	  /**
-	   * @param {FormState} formState
+	   * @param {FormState} insertData
 	   * @param {CostInfo} cost
 	   */
 	  var calculateDiscount = function calculateDiscount(insertData, cost) {
@@ -121136,6 +121254,11 @@
 	    });
 	  };
 	
+	  /**
+	   * @param {FormState} insertData
+	   * @param {CostInfo} cost
+	   * @returns {Array.<Service>}
+	   */
 	  var calculateAdditionalServices = function calculateAdditionalServices(insertData, cost) {
 	
 	    var formState = insertData.formState;
@@ -121256,6 +121379,7 @@
 	
 	  /**
 	   * @param {FormState} formState
+	   * @param {FormState} additionalState
 	   * @returns {CostInfo}
 	   */
 	  global.UVOCostCalculator = function (formState, additionalState) {

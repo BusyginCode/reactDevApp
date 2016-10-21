@@ -29,14 +29,14 @@ export default class TestComponent extends React.Component {
 
   calculate = () => {
     let insertFormData = {
-      charts: 5,
+      charts: 9,
       deadlineHrs: 168,
       deadlinePricePerPage: 17,
       discountPercent: 95,
       getProgressiveDeliveryOn: true,
       getSamplesOn: true,
       getUsedSourcesOn: true,
-      pages: 2,
+      pages: 5,
       slides: 6,
       spacing: 'double',
       winbackCoupons: [],
@@ -44,15 +44,16 @@ export default class TestComponent extends React.Component {
       writerPercent: 5,
     }
     let insertAdditionalData = {
-      charts:3,
-      deadlineHrs:168,
-      deadlinePricePerPage:17,
-      getProgressiveDeliveryOn:true,
-      getSamplesOn:true,
-      getUsedSourcesOn:true,
-      pages:3,
-      slides:4,
-      writerPercent:0,
+      charts: 1,
+      deadlineHrs: 168,
+      deadlinePricePerPage: 17,
+      getProgressiveDeliveryOn: true,
+      getSamplesOn: true,
+      getUsedSourcesOn: true,
+      pages: 5,
+      slides: 6,
+      writerCategoryId: 2,
+      writerPercent: 5,
     }
     console.log(window.UVOCostCalculator(insertFormData, insertAdditionalData))
   }
